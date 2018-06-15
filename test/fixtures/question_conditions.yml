@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  question: one
+  dependent_question_id: 1
+  condition: MyString
+  dependent_question_value: MyString
+
+two:
+  question: two
+  dependent_question_id: 1
+  condition: MyString
+  dependent_question_value: MyString

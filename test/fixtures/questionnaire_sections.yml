@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  questionnaire: one
+  position: 
+  name: MyString
+  description: MyString
+  icon: MyString
+
+two:
+  questionnaire: two
+  position: 
+  name: MyString
+  description: MyString
+  icon: MyString

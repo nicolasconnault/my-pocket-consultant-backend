@@ -1,0 +1,47 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require lightbox
+ *= require fullcalendar
+ *= require animate/animate.css
+ *= require jquery.minicolors
+ *= require jquery-ui
+ *= require jquery-ui/autocomplete
+ *= require jquery-ui/accordion
+ *= require jquery-ui/datepicker
+ *= require dataTables/jquery.dataTables
+ *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
+ *= require dashboard/jquery.dataTables.yadcf
+ *= require dashboard/formValidation.min 
+ *= require switchery
+ *= require dashboard/style
+ *= require font-awesome
+ *= require chosen
+ *= require froala_editor.min
+ *= require froala_style.min
+ *= require dashboard/select2.min
+ *= require plugins/char_counter.min
+ *= require plugins/code_view.min
+ *= require plugins/colors.min
+ *= require plugins/emoticons.min
+ *= require plugins/file.min
+ *= require plugins/fullscreen.min
+ *= require plugins/help.min
+ *= require plugins/image_manager.min
+ *= require plugins/image.min
+ *= require plugins/line_breaker.min
+ *= require plugins/quick_insert.min
+ *= require plugins/special_characters.min
+ *= require plugins/table.min
+ *= require plugins/video.min
+ *= require_self
+ */

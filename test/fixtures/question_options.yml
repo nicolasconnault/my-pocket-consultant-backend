@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  question: one
+  value: MyString
+  label: MyString
+  description: MyString
+  default_selected: false
+  position: 1
+
+two:
+  question: two
+  value: MyString
+  label: MyString
+  description: MyString
+  default_selected: false
+  position: 1

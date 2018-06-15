@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  questionnaire_response: one
+  html_report: MyString
+  email_report: MyString
+
+two:
+  questionnaire_response: two
+  html_report: MyString
+  email_report: MyString

@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  owner_id: 1
+  owner_type: MyString
+  searchable: false
+  description: MyString
+  references: 
+  references: 
+  sort_order: 1
+  enquiry_email: MyString
+
+two:
+  owner_id: 1
+  owner_type: MyString
+  searchable: false
+  description: MyString
+  references: 
+  references: 
+  sort_order: 1
+  enquiry_email: MyString

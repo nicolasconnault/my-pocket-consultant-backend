@@ -1,0 +1,9 @@
+<script>
+  $(function() {
+    $('#refresh-online-dates').click(function(event) {
+      $.get(Routes.kiosks_refresh_last_online_dates_path(), function() {
+        location.reload(); 
+      });
+    });
+  });
+</script>

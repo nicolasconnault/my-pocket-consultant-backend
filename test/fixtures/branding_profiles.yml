@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  colour_1: MyString
+  colour_2: MyString
+  colour_3: MyString
+  colour_text: MyString
+  logo: 
+  ad_roll_template: one
+
+two:
+  name: MyString
+  colour_1: MyString
+  colour_2: MyString
+  colour_3: MyString
+  colour_text: MyString
+  logo: 
+  ad_roll_template: two

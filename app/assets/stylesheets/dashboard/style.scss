@@ -1,0 +1,214 @@
+/*
+ *
+ *   INSPINIA - Responsive Admin Theme
+ *   version 2.6.2
+ *
+*/
+
+// Google Fonts
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&lang=en");
+
+// Bootstra
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+// Variables, Mixins
+@import "base/variables";
+@import "base/mixins";
+
+// INSPINIA Theme Elements
+@import "base/typography";
+@import "base/navigation";
+@import "base/top_navigation";
+@import "base/buttons";
+@import "base/badgets_labels";
+@import "base/elements";
+@import "base/sidebar";
+@import "base/base";
+@import "base/pages";
+@import "base/chat";
+@import "base/metismenu";
+@import "base/spinners";
+
+// Landing page
+@import "base/landing";
+
+// RTL Support
+@import "base/rtl";
+
+// For demo only - config box style
+@import "base/theme-config";
+
+// INSPINIA Skins
+@import "base/skins";
+@import "base/md-skin";
+
+// Media query style
+@import "base/media";
+
+// Custom style
+// Your custom style to override base style
+@import "base/custom";
+
+// Clear layout on print mode
+@media print {
+  nav.navbar-static-side {
+    display: none;
+  }
+
+  body { overflow: visible !important; }
+
+  #page-wrapper {
+    margin: 0;
+  }
+}
+
+  #page-wrapper {
+    padding-bottom: 100px;
+  }
+#side-menu i.fa {
+    width: 13px;
+    text-align: center;
+}
+#side-menu li a > span {
+    display: block;
+}
+i.online, i.play {
+    color: #39bb15;
+}
+i.offline, i.pause {
+    color: #e11312;
+}
+h3.popover-title {
+  margin-top: -1px;
+}
+.popover{
+    max-width: 100%; /* Max Width of the popover (depending on the container!) */
+}
+
+#entities-table td.actions {
+    min-width: 180px;
+    width: 180px;
+}
+.btn-default.btn-primary {
+    background-color: $navy; 
+    border-color: $navy;
+    color: #FFFFFF;
+}
+
+.sortable-placeholder {
+    background-color: #fff985 !important;
+    height: 56px;
+}
+
+.form-group abbr {
+    border-bottom: none;
+    text-decoration: none;
+}
+.form-group abbr[title="required"] {
+    color: red;
+}
+#edit-form {
+    .chosen-container {
+        display: block;
+    }
+    .file {
+        border: none;
+        margin-bottom: 5px;
+    }
+
+    .form-group.file {
+        margin-bottom: 20px;
+    }
+}
+th.actions {
+  width: 200px !important;
+}
+
+#entities-table tr.live-version {
+  background-color: #98d7ca;  
+}
+
+.btn-code {
+  background-color: #c474e4; 
+  border-color: #c474e4;
+  &:hover {
+      background-color: #c060e0; 
+  }
+}
+
+.btn-questions {
+  background-color: #63c743; 
+  border-color: #63c743;
+  &:hover {
+      background-color: #60c440;
+  }
+}
+
+td.actions .btn-group {
+    .btn {
+        width: 40px;
+        color: #fff;
+        &:hover {
+
+            color: #fff;
+        }
+    }
+
+    &.btn-group-first-line {
+        margin-bottom: -5px;
+        &> .btn:first-child:not(:last-child):not(.dropdown-toggle)  {
+            border-bottom-left-radius: 0;
+        } 
+        &> .btn:last-child:not(:first-child)  {
+            border-bottom-right-radius: 0;
+        }
+    }
+    &.btn-group-last-line {
+        &> .btn:first-child:not(:last-child):not(.dropdown-toggle)  {
+            border-top-left-radius: 0;
+        } 
+        &> .btn:last-child:not(:first-child)  {
+            border-top-right-radius: 0;
+        }
+    }
+}
+.form-horizontal .control-label.with-description {
+  padding-top: 0px;
+}
+
+.form-group label .description {
+    font-size: 80%;
+    color: #CCC;
+    font-style: italic;
+}
+
+.form-group .colour {
+    width: 100px;
+    height: 35px;
+}
+
+img.datatable-image {
+  max-width: 150px;
+}
+
+optgroup[disabled] {
+  display: none;
+}
+
+.progress-label {
+    float: left;
+    margin-right: 1em;
+}
+
+div.datepicker div.bootstrap-datetimepicker-widget {
+    z-index: 999;
+}
+.alert-fixed {
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+}
+.footer {
+    position: fixed;
+}

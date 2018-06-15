@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  questionnaire: one
+  email_template: MyString
+  html_template: MyString
+  report_type: MyString
+
+two:
+  questionnaire: two
+  email_template: MyString
+  html_template: MyString
+  report_type: MyString

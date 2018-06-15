@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  consultant: one
+  company: one
+
+two:
+  user: two
+  consultant: two
+  company: two

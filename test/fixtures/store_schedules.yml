@@ -1,0 +1,35 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  store: one
+  day_1_opening: 2017-11-29 11:28:36
+  day_1_closing: 2017-11-29 11:28:36
+  day_2_opening: 2017-11-29 11:28:36
+  day_2_closing: 2017-11-29 11:28:36
+  day_3_opening: 2017-11-29 11:28:36
+  day_3_closing: 2017-11-29 11:28:36
+  day_4_opening: 2017-11-29 11:28:36
+  day_4_closing: 2017-11-29 11:28:36
+  day_5_opening: 2017-11-29 11:28:36
+  day_5_closing: 2017-11-29 11:28:36
+  day_6_opening: 2017-11-29 11:28:36
+  day_6_closing: 2017-11-29 11:28:36
+  day_7_opening: 2017-11-29 11:28:36
+  day_7_closing: 2017-11-29 11:28:36
+
+two:
+  store: two
+  day_1_opening: 2017-11-29 11:28:36
+  day_1_closing: 2017-11-29 11:28:36
+  day_2_opening: 2017-11-29 11:28:36
+  day_2_closing: 2017-11-29 11:28:36
+  day_3_opening: 2017-11-29 11:28:36
+  day_3_closing: 2017-11-29 11:28:36
+  day_4_opening: 2017-11-29 11:28:36
+  day_4_closing: 2017-11-29 11:28:36
+  day_5_opening: 2017-11-29 11:28:36
+  day_5_closing: 2017-11-29 11:28:36
+  day_6_opening: 2017-11-29 11:28:36
+  day_6_closing: 2017-11-29 11:28:36
+  day_7_opening: 2017-11-29 11:28:36
+  day_7_closing: 2017-11-29 11:28:36

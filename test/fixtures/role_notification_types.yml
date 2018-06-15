@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  role: one
+  wupee_notification_type: one
+  email: false
+  notify: false
+
+two:
+  role: two
+  wupee_notification_type: two
+  email: false
+  notify: false

@@ -1,0 +1,119 @@
+  <div id="edit-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="edit-modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <%= simple_form_for :user, url: dashboard_users_edit_path, html: {
+            class: 'form', 
+              id: 'edit-form',
+              'data-fv-framework': "bootstrap",
+              'data-fv-icon-valid': "fa fa-check",
+              'data-fv-icon-invalid': "fa fa-times",
+              'data-fv-icon-validating': "fa fa-refresh",
+              'data-fv-live': "enabled",
+              'data-fv-excluded': ':disabled',
+              multipart: true
+        } do |f| %>
+          <%= f.input 'id', as: :hidden, input_html: {value: '', class: 'id'} %>
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cancel"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">New <%= @entity_name %></h4>
+          </div>
+          <div class="modal-body">
+            <%= f.input 'username', label: 'Username' %>
+            <%= f.input 'first_name', label: 'First name' %>
+            <%= f.input 'last_name', label: 'Last name' %>
+            <%= f.input 'email', label: 'Email', as: :email, required: false %>
+            <%= f.input 'roles', label: 'Roles', collection: @roles, required: false, input_html: {class: 'form-control chosen-select', multiple: true} %>
+            <%= f.input 'avatar', label: 'Avatar', as: :file, required: false, input_html: {} %>
+            <%= f.input 'password', label: 'Password', as: :password, required: false %>
+            <img src="" id="store-logo" />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <%= f.button :submit, label: "Save changes" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function() {
+
+      $('#edit-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+
+        var modal = $(this);
+
+        var id = button.attr('data-id'); 
+
+        if (id) {
+          modal.find('.modal-title').text('Edit <%= @entity_name %>');
+        } else {
+          modal.find('.modal-title').text('New <%= @entity_name %>');
+          reset_form_fields(this);
+        }
+
+        var role_ids = (undefined === button.attr('data-roles') || button.attr('data-roles').length == 0) ? null : JSON.parse(button.attr('data-roles')); 
+
+        if (id) {
+          $.each($(button).data(), function(name, value) {
+            var real_name = humps.decamelize(name); // jQuery automatically camelizes data-* variables, which were original activerecord fields, so we reverse that here
+            modal.find('#<%= @entity_name.downcase %>_'+real_name).val('');
+            
+            modal.find('#<%= @entity_name.downcase %>_'+real_name).val(value);
+            if (modal.find('#<%= @entity_name.downcase %>_'+real_name).data('disabled_if_editing')) {
+              modal.find('#<%= @entity_name.downcase %>_'+real_name).prop('disabled', true);
+            }
+
+            if (real_name == 'avatar_url') {
+              $('#store-avatar').attr('src', value);
+            }
+
+            if (real_name == 'owner_id') {
+              $('#'+button.attr('data-owner-type')+'_id').val(value);
+              $('#'+button.attr('data-owner-type')+'_id').trigger('chosen:updated');
+            }
+          });
+          
+          $.each(role_ids, function(key, item) {
+            $('[name="user[roles][]"] option[value="' + item + '"]').each(function(key, option) {
+              $(option).prop('selected', true);
+              $(option).trigger('chosen:updated');
+            });
+          });
+        } else {
+          $('#store-avatar').attr('src', ''); 
+        }
+        
+        $('.chosen-select').trigger('chosen:updated');
+        update_owner_id_dropdowns($('#user_owner_type').val());
+      
+        $('#user_owner_type').change(function(event) {
+          update_owner_id_dropdowns($(this).val());
+        });
+      });
+    });
+    function update_owner_id_dropdowns(owner_type) {
+      switch (owner_type) {
+        case 'Store':
+          $('#Store_id').prop('disabled', false).parent().show();
+          $('#Group_id').prop('disabled', true).parent().hide();
+          $('#Advertiser_id').prop('disabled', true).parent().hide();
+          break;
+        case 'Group':
+          $('#Store_id').prop('disabled', true).parent().hide();
+          $('#Group_id').prop('disabled', false).parent().show();
+          $('#Advertiser_id').prop('disabled', true).parent().hide();
+          break;
+        case 'Advertiser':
+          $('#Store_id').prop('disabled', true).parent().hide();
+          $('#Group_id').prop('disabled', true).parent().hide();
+          $('#Advertiser_id').prop('disabled', false).parent().show();
+          break;
+        default:
+          $('#Store_id').prop('disabled', true).parent().hide();
+          $('#Group_id').prop('disabled', true).parent().hide();
+          $('#Advertiser_id').prop('disabled', true).parent().hide(); 
+      }
+    }
+
+  </script>

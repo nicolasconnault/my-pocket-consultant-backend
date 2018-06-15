@@ -1,0 +1,197 @@
+  <div id="edit-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="edit-modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <%= form_tag users_edit_path, method: :post, class: 'form', id: 'edit-form' do %>
+          <input type="hidden" name="id" id="id_wrapper" />
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cancel"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">New <%= @entity_name %></h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group <%= @errors[:username] ? 'has-error' : '' %>" id="username_wrapper">
+              <label for="username">Username</label>
+              <% if @errors[:username] %><label class="control-label"><%= @errors[:username].first %></label><% end %>
+              <%= text_field_tag :username, params[:username], class: 'form-control', id: 'username' %>
+            </div>
+            <div class="form-group <%= @errors[:user_type] ? 'has-error' : '' %>">
+              <label style="vertical-align: top" for="user_type">User type</label>
+              <% if @errors[:user_type] %><label class="control-label"><%= @errors[:user_type].first %></label><% end %>
+              <%= select_tag :user_type, options_for_select([['Pharmacy Kiosk', 'kiosk'], ['Pharmacy Group', 'config'], ['Dashboard only', 'dashboard']], params[:user_type]), id: 'user_type', class: 'form-control' %>
+            </div>
+            <div class="form-group <%= @errors[:config_id] ? 'has-error' : '' %>" id="config_id_wrapper" style="display: none">
+              <label style="vertical-align: top" for="config_id">Pharmacy Group</label>
+              <% if @errors[:config_id] %><label class="control-label"><%= @errors[:config_id].first %></label><% end %>
+              <%= select_tag :config_id, options_for_select(@pharmacy_groups, params[:config_id]), id: 'config_id', class: 'form-control' %>
+            </div>
+            <div class="form-group <%= @errors[:kiosk_id] ? 'has-error' : '' %>" id="kiosk_id_wrapper">
+              <label style="vertical-align: top" for="kiosk_id">Pharmacy</label>
+              <% if @errors[:kiosk_id] %><label class="control-label"><%= @errors[:kiosk_id].first %></label><% end %>
+              <%= select_tag :kiosk_id, options_for_select(@kiosks, params[:kiosk_id]), id: 'kiosk_id', class: 'form-control' %>
+            </div>
+            <div class="form-group <%= @errors[:first_name] ? 'has-error' : '' %>" id="first_name_wrapper" style="display: none;">
+              <label for="first_name">First Name</label>
+              <% if @errors[:first_name] %><label class="control-label"><%= @errors[:first_name].first %></label><% end %>
+              <%= text_field_tag :first_name, params[:first_name], class: 'form-control', id: 'first_name' %>
+            </div>
+            <div class="form-group <%= @errors[:last_name] ? 'has-error' : '' %>" id="last_name_wrapper" style="display: none;">
+              <label for="last_name">Last Name</label>
+              <% if @errors[:last_name] %><label class="control-label"><%= @errors[:last_name].first %></label><% end %>
+              <%= text_field_tag :last_name, params[:last_name], class: 'form-control', id: 'last_name' %>
+            </div>
+            <div class="form-group <%= @errors[:email] ? 'has-error' : '' %>" id="email_wrapper">
+              <label for="email">Email address</label>
+              <% if @errors[:email] %><label class="control-label"><%= @errors[:email].first %></label><% end %>
+              <%= text_field_tag :email, params[:email], class: 'form-control', id: 'email' %>
+            </div> 
+            <div class="form-group <%= @errors[:roles] ? 'has-error' : '' %>" id="user_roles_wrapper">
+              <label style="vertical-align: top" for="user_roles">Roles</label>
+              <% if @errors[:roles] %><label class="control-label"><%= @errors[:roles].first %></label><% end %>
+              <%= select_tag :roles, options_for_select(@roles, params[:roles]), multiple: true, id: 'user_roles', class: 'form-control chosen-select' %>
+            </div>
+            <div class="form-group <%= @errors[:password] ? 'has-error' : '' %>">
+              <label for="password">Password</label>
+              <% if @errors[:password] %><label class="control-label"><%= @errors[:password].first %></label><% end %>
+              <%= password_field_tag :password, nil, class: 'form-control', id: 'password' %>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function() {
+      $('#edit-form').bootstrapValidator({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'fa-check',
+            invalid: 'fa-times',
+            validating: 'fa-spinner'
+        },
+        fields: {
+            username: {
+                threshold: 5,
+                validators: {
+                    notEmpty: {
+                        message: 'The username is required'
+                    },
+                    remote: {
+                        url: Routes.check_username_uniqueness_path(),
+                        type: 'GET',
+                        delay: 500,
+                        data: function(validator, $field, value) {
+                            return {
+                                id: validator.getFieldElements('id').val()
+                            };
+                        },
+                        message: 'This username is already registered'
+                    }
+                }
+            },
+            email: {
+                threshold: 5,
+                validators: {
+                    notEmpty: {
+                        message: 'The email address is required'
+                    },
+                    remote: {
+                        url: Routes.check_email_uniqueness_path(),
+                        type: 'GET',
+                        delay: 500,
+                        data: function(validator, $field, value) {
+                            return {
+                                id: validator.getFieldElements('id').val()
+                            };
+                        },
+                        message: 'This email address is already registered'
+                    },
+                    emailAddress: {
+                        message: 'Please enter a valid email address'
+                    }
+                },
+            },
+            kiosk_id: {
+                selector: '#kiosk_id',
+                validators: {
+                  callback: {
+                    callback: function(value, validator, $field) {
+                      return $('#user_type').val() == 'kiosk' && value != null && value.length > 0;
+                    },
+                    message: "A pharmacy must be selected"
+                  }
+                }
+            },
+            config_id: {
+                selector: '#config_id',
+                validators: {
+                  callback: {
+                    callback: function(value, validator, $field) {
+                      return $('#user_type').val() == 'config' && value != null && value.length > 0;
+                    },
+                    message: "A pharmacy group must be selected"
+                  }
+                }
+            },
+        }
+      });
+      
+      update_visible_inputs();
+
+      $('#edit-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var id = button.attr('data-id'); 
+        var modal = $(this);
+        var user_roles = JSON.parse(button.attr('data-roles')); 
+
+        // Clear the form first
+        modal.find('#id').val('');
+        modal.find('#password').val('');
+        modal.find('#user_roles').val('');
+
+        modal.find('#id').val(id);
+        
+        if (id) {
+          modal.find('.modal-title').text('Edit <%= @entity_name %>');
+          modal.find('#id').val(id);
+        
+          $('#user_roles option').each(function(key, option) {
+            if ($.inArray($(option).val() * 1, user_roles) != -1) {
+              $(option).prop('selected', true);
+            } else {
+              $(option).prop('selected', false);
+            }
+          });
+          $('#user_roles').trigger('chosen:updated');
+        }
+      }); 
+
+      $('#user_type').change(function(e) {
+        update_visible_inputs();
+      });
+    });
+
+    function update_visible_inputs() {
+        if ($('#user_type').val() == 'dashboard') {
+          $('#first_name_wrapper').show();
+          $('#last_name_wrapper').show();
+        } else {
+          $('#first_name_wrapper').hide();
+          $('#last_name_wrapper').hide(); 
+        }
+
+        if ($('#user_type').val() == 'config') {
+          $('#config_id_wrapper').show();
+        } else {
+          $('#config_id_wrapper').hide();
+        }
+
+        if ($('#user_type').val() == 'kiosk') {
+          $('#kiosk_id_wrapper').show();
+        } else {
+          $('#kiosk_id_wrapper').hide();
+        } 
+    }
+  </script>

@@ -1,0 +1,400 @@
+$(function() {
+  $('#main-notification').modal();
+  $('#main-notification').on('show.bs.modal', function() {
+    $(this).show();
+    setModalMaxHeight(this);
+  });
+
+  $(window).resize(function() {
+    if ($('#main-notification.in').length != 0) {
+      setModalMaxHeight($('.modal.in'));
+    }
+    });
+
+  $('.chosen-select').chosen({
+    allow_single_deselect: true,
+    no_results_text: 'No results matched',
+    width: '200px'
+  });
+
+  var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+
+  elems.forEach(function(html) {
+    var switchery = new Switchery(html);
+    });
+
+  $(".alert-fixed").fadeTo(4000, 500).slideUp(500, function(){
+    $(".alert-fixed").slideUp(500);
+  });
+});
+
+function reset_form_fields(form) { 
+  $(form).find('input,select').each(function(key, field) {
+      if ($(field).attr('name') != undefined && null == $(field).attr('name').match(/authenticity_token|utf8|commit|submit|save/) && $(field).attr('type') != 'hidden') {
+        $(field).val('').trigger('chosen:updated');
+      }
+  });
+  $(form).find('input[name=id]').val('');
+  $(form).find('input,select').prop('disabled', false);
+}
+
+$(document).on('click', function (e) {
+    $('[data-toggle="popover"],[data-original-title]').each(function () {
+        //the 'is' for buttons that trigger popups
+        //the 'has' for icons within a button that triggers a popup
+        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {                
+            (($(this).popover('hide').data('bs.popover')||{}).inState||{}).click = false  // fix for BS 3.3.6
+        } 
+    });
+});
+$(document).on('keyup', function (e) {
+    if (e.keyCode == 27) { // Escape
+      $('[data-toggle="popover"],[data-original-title]').each(function () {
+          (($(this).popover('hide').data('bs.popover')||{}).inState||{}).click = false  // fix for BS 3.3.6
+      });
+    }
+});
+
+/*
+ * Accepts either a plain string (in which case it will be a Success message) or an object with type, body and heading values
+ */
+function ajax_notification(message) {
+  var icon = null;
+
+  if (undefined !== message.responseJSON) {
+    message = message.responseJSON;
+  }
+
+  var type = (undefined === message.type) ? 'success' : message.type;
+  var body = (undefined === message.body) ? message : message.body;
+  var heading = (undefined === message.body) ? 'Success' : message.body;
+
+  switch(type) {
+    case 'error':
+    case 'danger':
+      type = 'danger';
+      icon = 'remove';
+      break;
+    case 'warning':
+      icon = 'exclamation';
+      break;
+    case 'success':
+      icon = 'check';
+      break;
+  }
+
+  $('#ajax-popup-notification').modal('hide');
+  $('#ajax-popup-notification').removeClass('success');
+  $('#ajax-popup-notification').removeClass('modal_success');
+  $('#ajax-popup-notification').removeClass('warning');
+  $('#ajax-popup-notification').removeClass('modal_warning');
+  $('#ajax-popup-notification').removeClass('error');
+  $('#ajax-popup-notification').removeClass('modal_error');
+
+  $('#ajax-popup-notification .modal-header').removeClass('alert-success');
+  $('#ajax-popup-notification .modal-header').removeClass('alert-warning');
+  $('#ajax-popup-notification .modal-header').removeClass('alert-error');
+  $('#ajax-popup-notification .modal-header').addClass('alert-' + type);
+
+  $('#ajax-popup-notification #ajax-label i').removeClass('fa-remove');
+  $('#ajax-popup-notification #ajax-label i').removeClass('fa-exclamation');
+  $('#ajax-popup-notification #ajax-label i').removeClass('fa-check');
+  $('#ajax-popup-notification #ajax-label i').addClass('fa-' + icon);
+
+  $('#ajax-popup-notification .message-heading').html(heading);
+  $('#ajax-popup-notification .message-body').html(body);
+
+  $('#ajax-popup-notification').modal('show');
+  setTimeout(function() {
+    $('#ajax-popup-notification').modal('hide');
+  }, 2000);
+
+}
+
+function setModalMaxHeight(element) {
+  this.$element     = $(element);
+  this.$content     = this.$element.find('.modal-content');
+  var borderWidth   = this.$content.outerHeight() - this.$content.innerHeight();
+  var dialogMargin  = $(window).width() < 768 ? 20 : 60;
+  var contentHeight = $(window).height() - (dialogMargin + borderWidth);
+  var headerHeight  = this.$element.find('.modal-header').outerHeight() || 0;
+  var footerHeight  = this.$element.find('.modal-footer').outerHeight() || 0;
+  var maxHeight     = contentHeight - (headerHeight + footerHeight);
+
+  this.$content.css({
+      'overflow': 'hidden'
+  });
+
+  this.$element
+    .find('.modal-body').css({
+      'max-height': maxHeight,
+      'overflow-y': 'auto'
+  });
+} 
+function get_datatable_selected_ids(datatable) {
+    var entity_ids = [];
+    datatable.rows( { selected: true } ).nodes().to$().map(function(){
+        entity_ids.push($(this).data('id'));
+    });
+    return entity_ids;
+}
+
+function get_datatable_buttons(datatable, button_config) {
+  var buttons = [];
+
+  if (button_config.select) {
+    buttons.push({
+       extend: 'selectAll',
+       text: '<i class="fa fa-check-square"></i> Select All',
+       className: 'selectall',
+       action : function(e) {
+         e.preventDefault();
+         var table = $('#entities-table').DataTable({retrieve: true});
+
+         table.rows({ page: 'all'}).nodes().each(function() {
+           $(this).removeClass('selected')
+         })
+         table.rows({ search: 'applied'}).nodes().each(function() {
+           $(this).addClass('selected');        
+         })
+         table.button(0).enable(false);
+         table.button(1).enable(true);
+         $('.btn.bulk-actions').each(function(key, item) {
+             table.button($(this)).enable(true); 
+         });
+       }
+     });
+    
+    buttons.push({
+       extend: 'selectNone',
+       text: '<i class="fa fa-check-square-o"></i> De-select All',
+       action : function(e) {
+         e.preventDefault();
+         var table = $('#entities-table').DataTable({retrieve: true});
+         table.rows({ page: 'all'}).nodes().each(function() {
+           $(this).removeClass('selected')
+         })
+         table.button(1).enable(false);
+         table.button(0).enable(true);
+         $('.btn.bulk-actions').each(function(key, item) {
+             table.button($(this)).enable(false); 
+         });
+       }
+     });
+  }
+
+  if (button_config.extra) {
+
+    for (key in button_config.extra) {
+      buttons.push(button_config.extra[key]);
+    }
+  }
+
+  if (button_config.toggle) {
+    buttons.push({
+       className: 'btn-warning bulk-actions',
+       text: '<i class="fa fa-pause"></i>',
+       titleAttr: 'Pause selected',
+       action: function(event, dt, node, config) {
+         var selected_ids = get_datatable_selected_ids(dt);
+         $.ajax({
+            url: button_config.toggle, 
+            type: 'PUT',
+            data: {
+              ids: selected_ids, 
+              enabled: 1
+            }, 
+            complete: function(message) {
+              var params = $.deparam(this.data);
+
+              $.each(params.ids, function(key, id) { 
+                toggle_datatable_row(id, false);
+              });
+              ajax_notification(message);
+            }
+         });
+       }
+    });
+    
+    buttons.push({
+       className: 'btn-primary btn bulk-actions',
+       text: '<i class="fa fa-play"></i>',
+       titleAttr: 'Resume selected',
+       action: function(event, dt, node, config) {
+         var selected_ids = get_datatable_selected_ids(dt);
+         $.ajax({
+            url: button_config.toggle, 
+            type: 'PUT',
+            data: {
+              ids: selected_ids, 
+              enabled: 0
+            }, 
+            complete: function(message) {
+              var params = $.deparam(this.data);
+
+              $.each(params.ids, function(key, id) { 
+                toggle_datatable_row(id, true);
+              });
+              ajax_notification(message);
+            }
+         });
+       }
+    });
+  }
+
+  if (button_config.delete) {
+    buttons.push({
+       className: 'btn-danger bulk-actions',
+       text: '<i class="fa fa-trash-o"></i>',
+       titleAttr: 'Delete selected',
+       action: function(event, dt, node, config) {
+       var selected_ids = get_datatable_selected_ids(dt);
+         if (confirm(button_config.delete_confirm_message)) {
+            $.ajax({
+              url: button_config.delete, 
+              type: 'DELETE', 
+              data: {ids: selected_ids}, 
+              complete: function(message) {
+                $.each(selected_ids, function(key, id) { 
+                  $('tr[data-id=' + id + ']').remove();
+                });
+
+                ajax_notification(message);
+              }
+            });
+         } 
+       }
+     });
+  }
+
+  if (button_config.export) {
+    buttons.push({
+      extend: 'copy',
+      text: '<i class="fa fa-clipboard"></i>'
+    });
+    buttons.push({
+      extend: 'excelHtml5',
+      text: '<i class="fa fa-file-excel-o"></i>'
+    });
+    buttons.push({
+      extend: 'pdfHtml5',
+      text: '<i class="fa fa-file-pdf-o"></i>'
+    });
+    buttons.push({
+      extend: 'csvHtml5',
+      text: '<i class="fa fa-table"></i>'
+    });
+  }
+
+  return buttons;
+}
+
+function setup_datatable_select_events(datatable) {
+
+  update_bulk_action_buttons(datatable);
+  datatable.on( 'select', function ( e, dt, type, indexes ) {
+      update_bulk_action_buttons(datatable);
+  });
+  datatable.on( 'deselect', function ( e, dt, type, indexes ) {
+      update_bulk_action_buttons(datatable);
+  });
+}
+
+function update_bulk_action_buttons(datatable) {
+    if ( datatable.rows( { selected: true } ).indexes().length === 0 ) {
+        $('.btn.bulk-actions').each(function(key, item) {
+           datatable.button($(this)).enable(false); 
+        });
+    } else {
+        $('.btn.bulk-actions').each(function(key, item) {
+           datatable.button($(this)).enable(); 
+        });
+    }
+}
+
+function toggle_datatable_row(row_id, on) {
+  if (on) {
+    $('tr[data-id=' + row_id + '] i.fa-pause').removeClass('fa-pause pause').addClass('fa-play play');
+    var toggle_button = $('tr[data-id=' + row_id + '] button.toggle');
+    toggle_button.attr('title', toggle_button.attr('title').replace('Resume this', 'Pause this'));
+    toggle_button.removeClass('btn-primary').addClass('btn-warning');
+    toggle_button.find('i').removeClass('fa-play').addClass('fa-pause');
+    toggle_button.attr('data-enabled', 1);
+    toggle_button.attr('data-status', 1);
+  } else {
+    $('tr[data-id=' + row_id + '] td.status-icon i.fa-play').removeClass('fa-play play').addClass('fa-pause pause');
+    var toggle_button = $('tr[data-id=' + row_id + '] button.toggle');
+    toggle_button.attr('title', toggle_button.attr('title').replace('Pause this', 'Resume this'));
+    toggle_button.removeClass('btn-warning').addClass('btn-primary');
+    toggle_button.find('i').removeClass('fa-pause').addClass('fa-play');
+    toggle_button.attr('data-enabled', 0);
+    toggle_button.attr('data-status', 0);
+  }
+}
+
+var global_datatable_options = {
+    processing: true,
+    dom: 'fBrtip',
+    serverSide: true,
+    serverMethod: 'post',
+    pagingType: 'full_numbers',
+    order: [[0, 'desc']],
+    autoWidth: true,
+    // Make editable rows clickable: goes to the row's record edit page
+    createdRow: function(row, data, dataIndex) {
+      var row_edit_url = $(row).find('a.edit-row').attr('href');
+      if (row_edit_url != undefined) {
+        $(row).addClass('clickable'); 
+
+        $(row).click(function (e) {
+          window.location = row_edit_url;
+        });
+      }
+    }
+};
+
+// Depends on formValidation being configured mostly inline in the forms, but additional options can be passed here. Check http://formvalidation.io 
+function setup_data_form(form_id, form_validation_options) {
+  if (form_id == undefined) {
+    form_id = 'edit-form';
+  }
+
+  $('.create-button').click(function(e) {
+    $(this).siblings('.form-elements-wrapper').removeClass('hidden').find('[disabled]').prop('disabled', false);
+    $(this).siblings('.form-elements-wrapper').find('.cancel-button').show();
+    $(this).hide();
+  });
+  
+  $('.cancel-button').click(function(e) {
+    $(this).parent().addClass('hidden');
+    $(this).siblings('div').find('input, select, textarea').prop('disabled', true);
+    $(this).parents('form').find('.create-button').show();
+    $(this).parents('form').data('formValidation').resetForm();
+    $(this).parents('.panel').find('.panel-heading').removeClass('error'); 
+    $(this).hide();
+  });
+
+  $('#'+form_id).formValidation(form_validation_options).on('success.form.fv', function(e) {
+      // Called when the form is valid
+      
+      var $form = $(e.target);
+      if ($form.data('remote') && $.rails !== undefined) {
+          e.preventDefault();
+      }
+  }).on('err.field.fv', function(e, data) {
+      // $(e.target)  --> The field element
+      // data.fv      --> The FormValidation instance
+      // data.field   --> The field name
+      // data.element --> The field element 
+    $(data.element).parents('.panel').find('.panel-heading').addClass('error');
+  }).on('status.field.fv', function(e, data) {
+      // The e and data parameters are the same
+
+      // data.status --> New field status
+      // data.validator --> The name of current validator
+
+      if (data.status == 'VALID') {
+        $(data.element).parents('.panel').find('.panel-heading').removeClass('error'); 
+      }
+  });
+};

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Dear <%= @advertiser.name %>,</h1>
+    <p>
+      Here's your advertising report for <%= Time.current.strftime '%B %Y' %>. It consists of 3 separate CSV files, which you can open with Microsoft Excel or other spreadsheet softwares.
+    </p>
+  </body>
+</html>

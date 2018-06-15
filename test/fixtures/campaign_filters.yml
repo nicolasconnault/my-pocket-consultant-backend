@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  campaign: one
+  target_id: 1
+  target_type: MyString
+  filter_type: MyString
+
+two:
+  campaign: two
+  target_id: 1
+  target_type: MyString
+  filter_type: MyString

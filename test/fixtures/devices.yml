@@ -1,0 +1,45 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  device_type: one
+  store: one
+  campaign: one
+  hardware_owner: MyString
+  activity_last_day: 1
+  activity_last_week: 1
+  activity_last_month: 1
+  shortcode: MyString
+  wake_on_schedule: 1
+  warranty_end_date: 2017-04-21
+  os: MyString
+  os_version: MyString
+  model: MyString
+  make: MyString
+  serial_number: MyString
+  purchase_order_number: MyString
+  browser: MyString
+  browser_version: MyString
+  screen_height: 1
+  screen_width: 1
+
+two:
+  device_type: two
+  store: two
+  campaign: two
+  hardware_owner: MyString
+  activity_last_day: 1
+  activity_last_week: 1
+  activity_last_month: 1
+  shortcode: MyString
+  wake_on_schedule: 1
+  warranty_end_date: 2017-04-21
+  os: MyString
+  os_version: MyString
+  model: MyString
+  make: MyString
+  serial_number: MyString
+  purchase_order_number: MyString
+  browser: MyString
+  browser_version: MyString
+  screen_height: 1
+  screen_width: 1

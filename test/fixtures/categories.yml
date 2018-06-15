@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  parent_category_id: 1
+  slug: MyString
+  title: MyString
+
+two:
+  parent_category_id: 1
+  slug: MyString
+  title: MyString

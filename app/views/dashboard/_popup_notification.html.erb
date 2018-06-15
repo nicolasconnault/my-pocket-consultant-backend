@@ -1,0 +1,40 @@
+<%
+id ||= message_type
+icon ||= nil
+buttons ||= nil
+
+if icon.nil?
+  case message_type
+    when 'error'
+    when 'danger'
+      message_type = 'danger'
+      icon = 'remove'
+    when 'warning'
+      icon = 'exclamation'
+    when 'success'
+      icon = 'check'
+  end
+end
+%>
+<div class="<%= message_type %> popup-notification modal fade modal_<%= message_type %>" id="<%= id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header alert alert-<%= message_type %>">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel"><i class="fa fa-<%= icon %>"></i> <%= message_heading %></h3>
+      </div>
+      <div class="modal-body">
+          <p><%= message_body %></p>
+          <% if buttons.nil? %>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="OK">OK</button>
+          <% else %>
+            <% buttons.each do |button| %>
+              <%= link_to button["url"], class: "btn #{button["class"]}" do %>
+                <i class="fa fa-<%=button["icon"]%>"></i> <%=button["label"]%>
+              <% end %>
+            <% end %>
+          <% end %>
+      </div>
+    </div>
+  </div>
+</div>

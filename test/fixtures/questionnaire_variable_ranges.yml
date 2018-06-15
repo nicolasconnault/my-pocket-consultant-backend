@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  questionnaire_variable: one
+  name: MyString
+  description: MyString
+  recommendation: MyString
+  lower_limit: 1.5
+  upper_limit: 1.5
+
+two:
+  questionnaire_variable: two
+  name: MyString
+  description: MyString
+  recommendation: MyString
+  lower_limit: 1.5
+  upper_limit: 1.5

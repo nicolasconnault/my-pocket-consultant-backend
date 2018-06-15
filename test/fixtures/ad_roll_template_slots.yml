@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ad_roll_template: one
+  video_type: one
+  ad: one
+  required_length: 1
+
+two:
+  ad_roll_template: two
+  video_type: two
+  ad: two
+  required_length: 1

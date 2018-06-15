@@ -1,0 +1,1 @@
+SimpleNavigation.register_renderer dashboard_renderer: DashboardRenderer

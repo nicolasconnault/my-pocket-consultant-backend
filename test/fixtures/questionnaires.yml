@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  owner_type: MyString
+  owner_id: 1
+  name: MyString
+  label: MyString
+  default_value: 1.5
+  value_source: MyString
+  enabled: 1
+  completion_time: 1
+
+two:
+  owner_type: MyString
+  owner_id: 1
+  name: MyString
+  label: MyString
+  default_value: 1.5
+  value_source: MyString
+  enabled: 1
+  completion_time: 1

@@ -1,0 +1,15 @@
+defaults: &defaults
+  smtp_address: smtp.mandrillapp.com
+  smtp_domain: localhost
+  smtp_password: BhDIZZy7xC3qYH33wkEOkg
+  smtp_username: nicolasconnault@gmail.com
+
+development:
+  <<: *defaults
+
+production:
+  <<: *defaults
+
+test:
+  <<: *defaults
+

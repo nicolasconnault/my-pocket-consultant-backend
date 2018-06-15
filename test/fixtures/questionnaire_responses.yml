@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  questionnaire: one
+  respondent: one
+  completion_time: 1
+  staff_user_id: 1
+
+two:
+  questionnaire: two
+  respondent: two
+  completion_time: 1
+  staff_user_id: 1
