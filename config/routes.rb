@@ -43,7 +43,10 @@ Rails.application.routes.draw do
       
       root 'home#index', as: :app_root
       scope 'customer', defaults: { format: :json } do
-        get '/companies_with_consultants' => 'public#companies_with_consultants', as: :companies_with_consultants
+        get '/consultants' => 'public#consultants', as: :consultants
+        get '/customer_companies' => 'public#customer_companies', as: :customer_companies
+        put '/toggle_company' => 'public#toggle_company', as: :toggle_company
+        put '/select_consultant' => 'public#select_consultant', as: :select_consultant
       end
     end
   end

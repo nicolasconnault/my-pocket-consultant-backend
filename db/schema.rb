@@ -10,50 +10,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171129032836) do
+ActiveRecord::Schema.define(version: 20180618040813) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "addresses", force: :cascade do |t|
     t.integer  "country_id"
-    t.integer  "owner_id"
-    t.string   "owner_type"
+    t.integer  "user_id"
     t.string   "street1"
     t.string   "street2"
     t.string   "unit"
     t.string   "suburb"
     t.float    "latitude"
     t.float    "longitude"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string   "phone"
     t.string   "fax"
-    t.string  "state"
-    t.string  "postcode"
+    t.string   "state"
+    t.string   "postcode"
     t.string   "timezone"
     t.index ["country_id"], name: "index_addresses_on_country_id", using: :btree
   end
 
   create_table "companies", force: :cascade do |t|
-    t.string "name", limit: 64, null: false
-    t.string "label", limit: 64, null: false
+    t.string  "name",                limit: 64, null: false
+    t.string  "label",               limit: 64, null: false
     t.integer "company_category_id"
     t.index ["company_category_id"], name: "index_companies_on_company_category_id", using: :btree
   end
 
   create_table "company_categories", force: :cascade do |t|
-    t.string "name", limit: 64, null: false
+    t.string "name",  limit: 64, null: false
     t.string "label", limit: 64, null: false
-  end
-
-  create_table "users_companies", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "company_id", null: false
-    t.integer "consultant_id", null: true
-    t.index ["user_id"], name: "index_user_companies_on_user_id", using: :btree
-    t.index ["company_id"], name: "index_user_companies_on_company_id", using: :btree
-    t.index ["consultant_id"], name: "index_user_companies_on_consultant_id", using: :btree
   end
 
   create_table "countries", force: :cascade do |t|
@@ -73,7 +63,7 @@ ActiveRecord::Schema.define(version: 20171129032836) do
     t.index ["role_id"], name: "index_role_notification_types_on_role_id", using: :btree
     t.index ["wupee_notification_type_id"], name: "index_role_notification_types_on_wupee_notification_type_id", using: :btree
   end
-  
+
   create_table "roles", force: :cascade do |t|
     t.string   "name"
     t.string   "resource_type"
@@ -84,13 +74,23 @@ ActiveRecord::Schema.define(version: 20171129032836) do
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
     t.index ["name"], name: "index_roles_on_name", using: :btree
   end
-  
+
   create_table "settings", force: :cascade do |t|
     t.string   "name",       limit: 510,                    null: false
     t.text     "value",                                     null: false
     t.string   "status",     limit: 32,  default: "Active", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "company_id"
+    t.boolean  "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_subscriptions_on_company_id", using: :btree
+    t.index ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -125,6 +125,16 @@ ActiveRecord::Schema.define(version: 20171129032836) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
     t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
+  end
+
+  create_table "users_companies", force: :cascade do |t|
+    t.integer "user_id",                      null: false
+    t.integer "company_id",                   null: false
+    t.integer "consultant_id"
+    t.boolean "enabled",       default: true
+    t.index ["company_id"], name: "index_user_companies_on_company_id", using: :btree
+    t.index ["consultant_id"], name: "index_user_companies_on_consultant_id", using: :btree
+    t.index ["user_id"], name: "index_user_companies_on_user_id", using: :btree
   end
 
   create_table "users_roles", id: false, force: :cascade do |t|
@@ -162,16 +172,18 @@ ActiveRecord::Schema.define(version: 20171129032836) do
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
     t.boolean  "is_wanted",            default: true
-  and
+  end
 
   add_foreign_key "addresses", "countries"
   add_foreign_key "companies", "company_categories"
   add_foreign_key "role_notification_types", "roles"
   add_foreign_key "role_notification_types", "wupee_notification_types"
-  add_foreign_key "wupee_notification_type_configurations", "wupee_notification_types", column: "notification_type_id"
-  add_foreign_key "wupee_notifications", "wupee_notification_types", column: "notification_type_id"
+  add_foreign_key "subscriptions", "companies"
+  add_foreign_key "subscriptions", "users"
+  add_foreign_key "users_companies", "companies"
+  add_foreign_key "users_companies", "users"
   add_foreign_key "users_roles", "roles"
   add_foreign_key "users_roles", "users"
-  add_foreign_key "users_companies", "users", column: "user_id"
-  add_foreign_key "users_companies", "companies"
+  add_foreign_key "wupee_notification_type_configurations", "wupee_notification_types", column: "notification_type_id"
+  add_foreign_key "wupee_notifications", "wupee_notification_types", column: "notification_type_id"
 end

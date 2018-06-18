@@ -11,22 +11,48 @@ class User < ApplicationRecord
   has_many :companies, through: :users_companies, foreign_key: :user_id
   has_many :consultant_companies, class_name: "Company", source: :company, through: :users_companies, foreign_key: :consultant_id
   has_many :users_companies
+  has_many :subscriptions
+  has_many :subscribed_companies, class_name: "Company", source: :company, through: :subscriptions, foreign_key: :company_id
+  has_many :subscriptions
+
+  has_one :address
   has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: ":placeholder"
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
 
-  def companies_with_consultants
-    companies = []
-    UsersCompany.where(user_id: self.id).each do |c|
-      companies.push ({ 
-        name: c.company.name, 
-        label: c.company.label, 
-        id: c.company.id, 
-        consultantId: c.consultant_id, 
-        first_name: (c.consultant.nil?) ? nil : c.consultant.first_name, 
-        last_name: (c.consultant.nil?) ? nil : c.consultant.last_name
-      })
+  def customer_companies
+    # Uncomment below commented code when we upgrade to category-organised companies
+    # final_companies = {}
+    final_companies = []
+    user_companies = [] 
+    UsersCompany.where(user_id: self.id).each do |uc|
+      user_companies.push uc 
     end
-    companies
+
+    # Company.includes(:company_category).all.group_by(&:company_category).each do |category, companies|
+      # final_companies[category.name] = companies.map do |company| 
+      final_companies = Company.all.map do |company| 
+        enabled = user_companies.any?{|uc| uc.company.id == company.id && uc.enabled == true}
+        result = { 
+          name: company.name, 
+          label: company.label, 
+          id: company.id, 
+          enabled: enabled,
+          consultantId: nil,
+          first_name: nil,
+          last_name: nil
+        } 
+
+        if enabled && !user_companies.find{|uc| uc.company_id == company.id}.consultant.nil?
+          consultant = user_companies.find{|uc| uc.company_id == company.id}.consultant
+          result[:last_name] = consultant.last_name
+          result[:first_name] = consultant.first_name
+          result[:consultantId] = consultant.id
+        end
+        result
+      end
+    #end
+
+    final_companies
   end
 
   def email_required?
