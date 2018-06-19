@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.3.5'
+lock '3.11.0'
 
 set :application, 'mpc'
 set :repo_url, 'git@github.com:nicolasconnault/my-pocket-consultant-backend.git'
