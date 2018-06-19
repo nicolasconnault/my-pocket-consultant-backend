@@ -33,8 +33,6 @@
 //= require fullcalendar
 //= require dashboard/highcharts
 //= require dashboard/highcharts-more
-//= require dashboard/flowplayer.min
-//= require froala_editor.min
 //= require dashboard/select2.full.min
 //= require plugins/align.min
 //= require plugins/char_counter.min

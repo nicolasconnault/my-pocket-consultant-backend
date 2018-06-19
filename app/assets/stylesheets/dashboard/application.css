@@ -26,8 +26,6 @@
  *= require dashboard/style
  *= require font-awesome
  *= require chosen
- *= require froala_editor.min
- *= require froala_style.min
  *= require dashboard/select2.min
  *= require plugins/char_counter.min
  *= require plugins/code_view.min
