@@ -11,7 +11,7 @@ ssh_options = {
      forward_agent: false,
      auth_methods: %w(publickey password)
 }
-set :deploy_to, '/home/ubuntu/rails_apps/hp2'
+set :deploy_to, '/home/ubuntu/rails_apps/mpc'
 require 'byebug'
 role :app, %w{ubuntu@mpc-staging}
 role :web, %w{ubuntu@mpc-staging}

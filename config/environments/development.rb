@@ -44,8 +44,4 @@ Rails.application.configure do
   config.fog_provider = 'fog/aws'
   config.fog_credentials = {default: { aws_access_key_id: ENV['AWS_ACCESS_KEY_ID'], aws_secret_key_access: ENV['AWS_SECRET_ACCESS_KEY']}}
 
-  config.middleware.swap Rails::Rack::Logger, Silencer::Logger, :silence => [%r{.*record_impression.*}, %r{.*record_click.*}] 
-
-  config.action_cable.url = "ws://localhost:3000/cable"
-  config.ads_api_url = 'http://dashboard/advertising'
 end
