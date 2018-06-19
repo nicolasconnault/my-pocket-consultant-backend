@@ -27,19 +27,5 @@
  *= require font-awesome
  *= require chosen
  *= require dashboard/select2.min
- *= require plugins/char_counter.min
- *= require plugins/code_view.min
- *= require plugins/colors.min
- *= require plugins/emoticons.min
- *= require plugins/file.min
- *= require plugins/fullscreen.min
- *= require plugins/help.min
- *= require plugins/image_manager.min
- *= require plugins/image.min
- *= require plugins/line_breaker.min
- *= require plugins/quick_insert.min
- *= require plugins/special_characters.min
- *= require plugins/table.min
- *= require plugins/video.min
  *= require_self
  */
