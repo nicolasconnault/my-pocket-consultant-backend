@@ -5,5 +5,6 @@ class Company < ApplicationRecord
   has_many :users_companies
   has_many :subscribed_users, class_name: "User", through: :subscriptions, foreign_key: :user_id
   has_many :subscriptions
+  has_many :company_tutorials
 
 end

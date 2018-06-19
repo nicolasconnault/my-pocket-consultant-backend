@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  company_tutorial: one
+  title: MyString
+  description: MyString
+  sort_order: 1
+  video: false
+
+two:
+  company_tutorial: two
+  title: MyString
+  description: MyString
+  sort_order: 1
+  video: false

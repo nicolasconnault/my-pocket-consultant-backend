@@ -45,6 +45,7 @@ Rails.application.routes.draw do
       scope 'customer', defaults: { format: :json } do
         get '/consultants' => 'public#consultants', as: :consultants
         get '/customer_companies' => 'public#customer_companies', as: :customer_companies
+        get '/tutorials' => 'public#tutorials', as: :tutorials
         put '/toggle_company' => 'public#toggle_company', as: :toggle_company
         put '/select_consultant' => 'public#select_consultant', as: :select_consultant
       end

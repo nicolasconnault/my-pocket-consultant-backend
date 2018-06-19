@@ -19,6 +19,34 @@ class App::PublicController < App::ApplicationController
     end
   end
 
+  def tutorials
+    result = {}
+    
+    Company.all.each do |company|
+      result[company.name] ||= {}
+
+      company.company_tutorials.each do |tutorial|
+        result[company.name][tutorial.tutorial_category.title] ||= {}
+
+        tutorial.tutorial_steps.each do |step|
+          result[company.name][tutorial.tutorial_category.title][tutorial.title] ||= {}
+          result[company.name][tutorial.tutorial_category.title][tutorial.title][step.sort_order] = {
+            id: step.id,
+            title: step.title,
+            description: step.description,
+            video: step.video
+          }
+        end
+      end
+    end
+
+    respond_to do |format| 
+      format.json {
+        render json: {results: result }
+      }
+    end
+  end
+
   def customer_companies
     user = current_user || User.first # Delete this before going live, it's just to bypass initial authentication during testing
     respond_to do |format| 

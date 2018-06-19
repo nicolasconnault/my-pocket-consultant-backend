@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180618040813) do
+ActiveRecord::Schema.define(version: 20180619150952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,14 @@ ActiveRecord::Schema.define(version: 20180618040813) do
   create_table "company_categories", force: :cascade do |t|
     t.string "name",  limit: 64, null: false
     t.string "label", limit: 64, null: false
+  end
+
+  create_table "company_tutorials", force: :cascade do |t|
+    t.integer  "company_id"
+    t.string   "title",      null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_company_tutorials_on_company_id", using: :btree
   end
 
   create_table "countries", force: :cascade do |t|
@@ -86,14 +94,33 @@ ActiveRecord::Schema.define(version: 20180618040813) do
   create_table "subscriptions", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "company_id"
-    t.string  "website_url"
-    t.string  "facebook_url"
-    t.string  "twitter_url"
     t.boolean  "active"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.string   "website_url"
+    t.string   "facebook_url"
+    t.string   "twitter_url"
     t.index ["company_id"], name: "index_subscriptions_on_company_id", using: :btree
     t.index ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
+  end
+
+  create_table "tutorial_categories", force: :cascade do |t|
+    t.integer  "company_category_id"
+    t.string   "title",               null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.index ["company_category_id"], name: "index_tutorial_categories_on_company_category_id", using: :btree
+  end
+
+  create_table "tutorial_steps", force: :cascade do |t|
+    t.integer  "company_tutorial_id"
+    t.string   "title",                               null: false
+    t.string   "description",                         null: false
+    t.integer  "sort_order",          default: 1
+    t.boolean  "video",               default: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.index ["company_tutorial_id"], name: "index_tutorial_steps_on_company_tutorial_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -101,15 +128,14 @@ ActiveRecord::Schema.define(version: 20180618040813) do
     t.string   "last_name"
     t.string   "username"
     t.string   "password"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
     t.string   "email"
-    t.string   "phone"
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "encrypted_password",                default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",                     default: 0,  null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
@@ -118,13 +144,14 @@ ActiveRecord::Schema.define(version: 20180618040813) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
-    t.integer  "failed_attempts",        default: 0,  null: false
+    t.integer  "failed_attempts",                   default: 0,  null: false
     t.string   "unlock_token"
     t.datetime "locked_at"
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
+    t.string   "phone",                  limit: 14
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
@@ -180,10 +207,13 @@ ActiveRecord::Schema.define(version: 20180618040813) do
 
   add_foreign_key "addresses", "countries"
   add_foreign_key "companies", "company_categories"
+  add_foreign_key "company_tutorials", "companies"
   add_foreign_key "role_notification_types", "roles"
   add_foreign_key "role_notification_types", "wupee_notification_types"
   add_foreign_key "subscriptions", "companies"
   add_foreign_key "subscriptions", "users"
+  add_foreign_key "tutorial_categories", "company_categories"
+  add_foreign_key "tutorial_steps", "company_tutorials"
   add_foreign_key "users_companies", "companies"
   add_foreign_key "users_companies", "users"
   add_foreign_key "users_roles", "roles"
