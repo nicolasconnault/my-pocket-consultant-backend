@@ -115,7 +115,6 @@ GEM
       railties (>= 3.0)
       sass-rails (>= 3.2)
     chronic (0.10.2)
-    chunky_png (1.3.8)
     climate_control (0.2.0)
     cocaine (0.5.8)
       climate_control (>= 0.0.3, < 1.0)
@@ -134,28 +133,18 @@ GEM
     curb (0.9.3)
     dalli (2.7.6)
     deep_merge (1.1.1)
-    dentaku (3.0.0)
-    descriptive_statistics (2.4.0)
     devise (4.3.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 4.1.0, < 5.2)
       responders
       warden (~> 1.2.3)
-    diffy (3.2.0)
     erubis (2.7.0)
-    evercookie (0.1.2)
-      chunky_png
-      rails (>= 3.1)
     excon (0.55.0)
     execjs (2.7.0)
-    faraday (0.12.1)
-      multipart-post (>= 1.2, < 3)
     ffi (1.9.18)
     font-awesome-rails (4.7.0.2)
       railties (>= 3.2, < 5.2)
-    font-awesome-sass (4.7.0)
-      sass (>= 3.2)
     fullcalendar-rails (3.2.0.0)
       jquery-rails (>= 4.0.5, < 5.0.0)
       jquery-ui-rails (>= 5.0.2)
@@ -230,7 +219,6 @@ GEM
     momentjs-rails (2.17.1)
       railties (>= 3.1)
     multi_json (1.12.1)
-    multipart-post (2.0.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (4.1.0)
@@ -335,8 +323,6 @@ GEM
     sshkit (1.13.1)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stripe (2.9.0)
-      faraday (~> 0.9)
     switchery-rails (0.8.1.1)
       railties (>= 3.2, < 6.0)
     therubyracer (0.12.3)
@@ -366,13 +352,9 @@ GEM
     websocket-extensions (0.1.2)
     whenever (0.9.7)
       chronic (>= 0.6.3)
-    wikitext (4.4)
     wupee (2.0.0.beta2)
       jbuilder (~> 2.0)
       rails (>= 4.2.0)
-    wysiwyg-rails (2.6.1)
-      font-awesome-sass (~> 4.4, >= 4.4.0)
-      railties (>= 3.2, < 6.0)
     yaml_db (0.6.0)
       rails (>= 3.0, < 5.2)
       rake (>= 0.8.7)
@@ -405,11 +387,7 @@ DEPENDENCIES
   config
   curb
   dalli
-  dentaku (~> 3.0)
-  descriptive_statistics (~> 2.4.0)
   devise
-  diffy
-  evercookie
   execjs
   font-awesome-rails
   fullcalendar-rails
@@ -452,7 +430,6 @@ DEPENDENCIES
   simple_form_fancy_uploads
   spring
   spring-watcher-listen (~> 2.0.0)
-  stripe
   switchery-rails
   therubyracer
   timezone (~> 1.0)
@@ -462,9 +439,7 @@ DEPENDENCIES
   underscore-rails
   web-console (>= 3.3.0)
   whenever
-  wikitext
   wupee (>= 2.0.0.beta)
-  wysiwyg-rails
   yaml_db
 
 BUNDLED WITH
