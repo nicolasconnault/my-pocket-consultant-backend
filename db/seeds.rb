@@ -1,15 +1,3 @@
-User::HABTM_Roles.create!([
-  {user_id: 1, role_id: 1},
-  {user_id: 2, role_id: 2},
-  {user_id: 3, role_id: 2},
-  {user_id: 4, role_id: 2}
-])
-Role::HABTM_Users.create!([
-  {user_id: 1, role_id: 1},
-  {user_id: 2, role_id: 2},
-  {user_id: 3, role_id: 2},
-  {user_id: 4, role_id: 2}
-])
 User.create!([
   {first_name: "Nicolas", last_name: "Connault", username: "nicolasconnault@gmail.com", password: nil, email: "nicolasconnault@gmail.com", encrypted_password: "$2a$11$FiRr6u7dkpb192VoCpIHJ.APetyihnf8vz.0Iz7L3sl4LoMNwIvJW", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 0, current_sign_in_at: nil, last_sign_in_at: nil, current_sign_in_ip: nil, last_sign_in_ip: nil, confirmation_token: nil, confirmed_at: nil, confirmation_sent_at: nil, unconfirmed_email: nil, failed_attempts: 0, unlock_token: nil, locked_at: nil, avatar_file_name: nil, avatar_content_type: nil, avatar_file_size: nil, avatar_updated_at: nil, phone: nil},
   {first_name: "Jasmine", last_name: "Standley", username: nil, password: nil, email: "jasmine.standley@gmail.com", encrypted_password: "$2a$11$.ha/dh.PxzyiWGUmpT9P2OH029AxeRWoKlb2rkJ3kIrqB6nhPiFW6", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 0, current_sign_in_at: nil, last_sign_in_at: nil, current_sign_in_ip: nil, last_sign_in_ip: nil, confirmation_token: nil, confirmed_at: nil, confirmation_sent_at: nil, unconfirmed_email: nil, failed_attempts: 0, unlock_token: nil, locked_at: nil, avatar_file_name: nil, avatar_content_type: nil, avatar_file_size: nil, avatar_updated_at: nil, phone: nil},
