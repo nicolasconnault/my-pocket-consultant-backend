@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
  
   scope module: 'dashboard' do
-    constraints DomainConstraint.new(['dashboard.mypocketconsultant.com', 'stagingdashboard.mypocketconsultant.com', 'dashboard.mypocketconsultant']) do
+    constraints DomainConstraint.new(['dashboard.mypocketconsultant.com', 'stagingdashboard.mypocketconsultant.com', 'dashboard.mypocketconsultant', 'mpcdashboard.smbstreamline.com.au']) do
       
       root 'home#index', as: :dashboard_root
       get '/' => 'home#index', as: :dashboard_home
@@ -39,7 +39,7 @@ Rails.application.routes.draw do
   end
 
   scope module: 'app' do
-    constraints DomainConstraint.new(['app.mypocketconsultant.com', 'stagingapp.mypocketconsultant.com', 'app.mypocketconsultant', '192.168.0.11']) do
+    constraints DomainConstraint.new(['app.mypocketconsultant.com', 'stagingapp.mypocketconsultant.com', 'app.mypocketconsultant', 'mpc.smbstreamline.com.au', '192.168.0.11']) do
       
       root 'home#index', as: :app_root
       scope 'customer', defaults: { format: :json } do

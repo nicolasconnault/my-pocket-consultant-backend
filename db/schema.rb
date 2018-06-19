@@ -86,6 +86,9 @@ ActiveRecord::Schema.define(version: 20180618040813) do
   create_table "subscriptions", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "company_id"
+    t.string  "website_url"
+    t.string  "facebook_url"
+    t.string  "twitter_url"
     t.boolean  "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -101,6 +104,7 @@ ActiveRecord::Schema.define(version: 20180618040813) do
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
     t.string   "email"
+    t.string   "phone"
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"

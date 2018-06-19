@@ -5,17 +5,17 @@
 # property set.  Don't declare `role :all`, it's a meta role.
 ssh_options = {
      user: 'ubuntu', # overrides user setting above
-     keys: %w(/home/alvaador/.ssh/id_rsa_healthpoint),
+     keys: %w(/home/alvaador/.ssh/id_rsa_digitalocean_fgc),
      forward_agent: false,
      auth_methods: %w(publickey password)
 }
 require 'byebug'
-role :app, %w{ubuntu@hp-v2}
-role :web, %w{ubuntu@hp-v2}
-role :db,  %w{ubuntu@hp-v2}
+role :app, %w{ubuntu@mpc-staging}
+role :web, %w{ubuntu@mpc-staging}
+role :db,  %w{ubuntu@mpc-staging}
 
 set :branch, 'master'
-server 'hp-v2', user: 'ubuntu', roles: %w{web app}
+server 'mpc-staging', user: 'ubuntu', roles: %w{web app}
 
 # ps aux | grep puma    # Get puma pid
 # kill -s SIGUSR2 pid   # Restart puma

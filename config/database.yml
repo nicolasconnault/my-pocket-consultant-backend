@@ -11,8 +11,8 @@ default: &default
 
 development:
   <<: *default
-  username: nicolas
-  password: 1axi586
+  username: <%= ENV['MPC_APP_USER_POSTGRES_USERNAME'] %>
+  password: <%= ENV['MPC_APP_USER_POSTGRES_PASSWORD'] %>
   database: mypocketconsultant
 
 # Warning: The database defined as "test" will be erased and
@@ -20,12 +20,12 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  username: nicolas
-  password: 1axi586
+  username: <%= ENV['MPC_APP_USER_POSTGRES_USERNAME'] %>
+  password: <%= ENV['MPC_APP_USER_POSTGRES_PASSWORD'] %>
   database: mypocketconsultant
 
 production:
   <<: *default
-  username: nicolas
-  password: 1axi586
+  username: <%= ENV['MPC_APP_USER_POSTGRES_USERNAME'] %>
+  password: <%= ENV['MPC_APP_USER_POSTGRES_PASSWORD'] %>
   database: mypocketconsultant

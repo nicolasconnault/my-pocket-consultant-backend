@@ -1,18 +1,18 @@
 # config valid only for current version of Capistrano
 lock '3.3.5'
 
-set :application, 'healthpoint'
-set :repo_url, 'git@bitbucket.org:feelgreatchallenge/new-healthpoint.git'
+set :application, 'mpc'
+set :repo_url, 'git@github.com:nicolasconnault/my-pocket-consultant-backend.git'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/home/ubuntu/rails_apps/healthpoint'
+set :deploy_to, '/home/ubuntu/rails_apps/mpc'
 set :stages, %w(production development)
 set :default_stage, "production"
 set :rbenv_type, :user # or :system, depends on your rbenv setup
-set :rbenv_ruby, '2.4.2'
+set :rbenv_ruby, '2.5.1'
 set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
 set :rbenv_map_bins, %w{rake gem bundle ruby rails sidekiq sidekiqctl}
 ssh_options = {}

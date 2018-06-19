@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: MyString
+  references: MyString
+  company: one
+  active: false
+
+two:
+  user: MyString
+  references: MyString
+  company: two
+  active: false

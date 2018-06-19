@@ -39,14 +39,25 @@ class User < ApplicationRecord
           enabled: enabled,
           consultantId: nil,
           first_name: nil,
-          last_name: nil
+          last_name: nil,
+          email: nil,
+          phone: nil,
+          websiteUrl: nil,
+          facebookUrl: nil,
+          twitterUrl: nil
         } 
 
         if enabled && !user_companies.find{|uc| uc.company_id == company.id}.consultant.nil?
           consultant = user_companies.find{|uc| uc.company_id == company.id}.consultant
+          subscription = consultant.subscriptions.find_by_company_id(company.id)
           result[:last_name] = consultant.last_name
           result[:first_name] = consultant.first_name
+          result[:email] = consultant.email
+          result[:phone] = consultant.phone
           result[:consultantId] = consultant.id
+          result[:websiteUrl] = subscription.website_url
+          result[:facebookUrl] = subscription.facebook_url
+          result[:twitterUrl] = subscription.twitter_url
         end
         result
       end
