@@ -1,3 +1,12 @@
+CompanyCategory.create!([
+  {name: "beauty", label: "Beauty"},
+  {name: "health", label: "Health"},
+  {name: "cleaning", label: "Cleaning"},
+  {name: "kitchen", label: "Kitchen"}
+])
+Country.create!([
+  {name: "Australia", code: "AU"}
+])
 User.create!([
   {first_name: "Nicolas", last_name: "Connault", username: "nicolasconnault@gmail.com", password: nil, email: "nicolasconnault@gmail.com", encrypted_password: "$2a$11$FiRr6u7dkpb192VoCpIHJ.APetyihnf8vz.0Iz7L3sl4LoMNwIvJW", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 0, current_sign_in_at: nil, last_sign_in_at: nil, current_sign_in_ip: nil, last_sign_in_ip: nil, confirmation_token: nil, confirmed_at: nil, confirmation_sent_at: nil, unconfirmed_email: nil, failed_attempts: 0, unlock_token: nil, locked_at: nil, avatar_file_name: nil, avatar_content_type: nil, avatar_file_size: nil, avatar_updated_at: nil, phone: nil},
   {first_name: "Jasmine", last_name: "Standley", username: nil, password: nil, email: "jasmine.standley@gmail.com", encrypted_password: "$2a$11$.ha/dh.PxzyiWGUmpT9P2OH029AxeRWoKlb2rkJ3kIrqB6nhPiFW6", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 0, current_sign_in_at: nil, last_sign_in_at: nil, current_sign_in_ip: nil, last_sign_in_ip: nil, confirmation_token: nil, confirmed_at: nil, confirmation_sent_at: nil, unconfirmed_email: nil, failed_attempts: 0, unlock_token: nil, locked_at: nil, avatar_file_name: nil, avatar_content_type: nil, avatar_file_size: nil, avatar_updated_at: nil, phone: nil},
@@ -15,15 +24,6 @@ Company.create!([
   {name: "enjo", label: "Enjo", company_category_id: 1},
   {name: "tupperware", label: "Tupperware", company_category_id: 4},
   {name: "avon", label: "Avon", company_category_id: 2}
-])
-CompanyCategory.create!([
-  {name: "beauty", label: "Beauty"},
-  {name: "health", label: "Health"},
-  {name: "cleaning", label: "Cleaning"},
-  {name: "kitchen", label: "Kitchen"}
-])
-Country.create!([
-  {name: "Australia", code: "AU"}
 ])
 Role.create!([
   {name: "customer", resource_type: nil, resource_id: nil, label: nil},
