@@ -6,16 +6,16 @@
 ENV["AWS_REGION"] = 'ap-southeast-2'
 
 ssh_options = {
-     user: 'user_name', # overrides user setting above
-     keys: %w(/home/alvaador/ssh/healthpoint.pem),
+     user: 'ubuntu', # overrides user setting above
+     keys: %w(/home/alvaador/.ssh/id_rsa_digitalocean_fgc),
      forward_agent: false,
      auth_methods: %w(publickey password)
 }
 set :deploy_to, '/home/ubuntu/rails_apps/hp2'
 require 'byebug'
-role :app, %w{ubuntu@hp-staging}
-role :web, %w{ubuntu@hp-staging}
-role :db,  %w{ubuntu@hp-staging}
+role :app, %w{ubuntu@mpc-staging}
+role :web, %w{ubuntu@mpc-staging}
+role :db,  %w{ubuntu@mpc-staging}
 
 set :branch, 'master'
 

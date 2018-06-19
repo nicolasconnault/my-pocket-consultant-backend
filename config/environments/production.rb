@@ -88,8 +88,6 @@ Rails.application.configure do
 #   }
 # }
 
-  config.ads_api_url = 'http://dashboard.healthpointtech.com/advertising'
-
   config.middleware.swap Rails::Rack::Logger, Silencer::Logger, :silence => [%r{.*record_impression.*}, %r{.*record_click.*}]
   Sidekiq::Logging.logger.level = Logger::WARN
 end
