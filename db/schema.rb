@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180619150952) do
+ActiveRecord::Schema.define(version: 20180621234219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,9 +48,10 @@ ActiveRecord::Schema.define(version: 20180619150952) do
 
   create_table "company_tutorials", force: :cascade do |t|
     t.integer  "company_id"
-    t.string   "title",      null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "title",                null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.integer  "tutorial_category_id", null: false
     t.index ["company_id"], name: "index_company_tutorials_on_company_id", using: :btree
   end
 
@@ -59,6 +60,80 @@ ActiveRecord::Schema.define(version: 20180619150952) do
     t.string   "code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "oauth_access_grants", force: :cascade do |t|
+    t.integer  "resource_owner_id", null: false
+    t.integer  "application_id",    null: false
+    t.string   "token",             null: false
+    t.integer  "expires_in",        null: false
+    t.text     "redirect_uri",      null: false
+    t.datetime "created_at",        null: false
+    t.datetime "revoked_at"
+    t.string   "scopes"
+    t.index ["application_id"], name: "index_oauth_access_grants_on_application_id", using: :btree
+    t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true, using: :btree
+  end
+
+  create_table "oauth_access_tokens", force: :cascade do |t|
+    t.integer  "resource_owner_id"
+    t.integer  "application_id"
+    t.string   "token",                               null: false
+    t.string   "refresh_token"
+    t.integer  "expires_in"
+    t.datetime "revoked_at"
+    t.datetime "created_at",                          null: false
+    t.string   "scopes"
+    t.string   "previous_refresh_token", default: "", null: false
+    t.index ["application_id"], name: "index_oauth_access_tokens_on_application_id", using: :btree
+    t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true, using: :btree
+    t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id", using: :btree
+    t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
+  end
+
+  create_table "oauth_applications", force: :cascade do |t|
+    t.string   "name",                      null: false
+    t.string   "uid",                       null: false
+    t.string   "secret",                    null: false
+    t.text     "redirect_uri",              null: false
+    t.string   "scopes",       default: "", null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
+  end
+
+  create_table "rails_push_notifications_apns_apps", force: :cascade do |t|
+    t.text     "apns_dev_cert"
+    t.text     "apns_prod_cert"
+    t.boolean  "sandbox_mode"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  create_table "rails_push_notifications_gcm_apps", force: :cascade do |t|
+    t.string   "gcm_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "rails_push_notifications_mpns_apps", force: :cascade do |t|
+    t.text     "cert"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "rails_push_notifications_notifications", force: :cascade do |t|
+    t.text     "destinations"
+    t.integer  "app_id"
+    t.string   "app_type"
+    t.text     "data"
+    t.text     "results"
+    t.integer  "success"
+    t.integer  "failed"
+    t.boolean  "sent",         default: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.index ["app_id", "app_type", "sent"], name: "app_and_sent_index_on_rails_push_notifications", using: :btree
   end
 
   create_table "role_notification_types", force: :cascade do |t|
@@ -208,6 +283,9 @@ ActiveRecord::Schema.define(version: 20180619150952) do
   add_foreign_key "addresses", "countries"
   add_foreign_key "companies", "company_categories"
   add_foreign_key "company_tutorials", "companies"
+  add_foreign_key "company_tutorials", "tutorial_categories", name: "tutorial_category_fk_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
+  add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "role_notification_types", "roles"
   add_foreign_key "role_notification_types", "wupee_notification_types"
   add_foreign_key "subscriptions", "companies"

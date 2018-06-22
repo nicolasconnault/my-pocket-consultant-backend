@@ -1,4 +1,5 @@
-class App::PublicController < App::ApplicationController
+class Api::PublicController < Api::ApplicationController
+
   def consultants
     respond_to do |format| 
       format.json {
@@ -23,20 +24,23 @@ class App::PublicController < App::ApplicationController
     result = {}
     
     Company.all.each do |company|
-      result[company.name] ||= {}
+      result[company.label] ||= {}
 
       company.company_tutorials.each do |tutorial|
-        result[company.name][tutorial.tutorial_category.title] ||= {}
+        result[company.label][tutorial.tutorial_category.title] ||= []
 
+        tutorial_object = { id: tutorial.id, title: tutorial.title, steps: []} 
         tutorial.tutorial_steps.each do |step|
-          result[company.name][tutorial.tutorial_category.title][tutorial.title] ||= {}
-          result[company.name][tutorial.tutorial_category.title][tutorial.title][step.sort_order] = {
+
+          tutorial_object[:steps].push ({
             id: step.id,
             title: step.title,
             description: step.description,
             video: step.video
-          }
+          })
         end
+
+        result[company.label][tutorial.tutorial_category.title].push tutorial_object
       end
     end
 
@@ -46,9 +50,18 @@ class App::PublicController < App::ApplicationController
       }
     end
   end
+  
+  def user_details
+    user = current_resource_owner
+    respond_to do |format| 
+      format.json {
+        render json: {results: { id: user.id, first_name: user.first_name, last_name: user.last_name } }
+      }
+    end
+  end
 
   def customer_companies
-    user = current_user || User.first # Delete this before going live, it's just to bypass initial authentication during testing
+    user = current_resource_owner
     respond_to do |format| 
       format.json {
         render json: {results: user.customer_companies }
@@ -57,7 +70,7 @@ class App::PublicController < App::ApplicationController
   end
 
   def select_consultant
-    user = current_user || User.first # Delete this before going live, it's just to bypass initial authentication during testing
+    user = current_resource_owner
     uc = UsersCompany.where(user_id: user.id, company_id: params[:companyId]).first
     uc.consultant_id = params[:consultantId]
     uc.save!
@@ -66,7 +79,7 @@ class App::PublicController < App::ApplicationController
   end
 
   def toggle_company
-    user = current_user || User.first # Delete this before going live, it's just to bypass initial authentication during testing
+    user = current_resource_owner
     if params[:oldValue] == true
       if uc = UsersCompany.where(user_id: user.id, company_id: params[:companyId]).first
         uc.update_attribute(:enabled, false)
@@ -87,4 +100,11 @@ class App::PublicController < App::ApplicationController
       }
     end
   end
+
+  private
+
+  def current_resource_owner
+    User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
+  end
+
 end

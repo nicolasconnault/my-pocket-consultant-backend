@@ -1,8 +1,13 @@
-class App::ApplicationController < ActionController::Base
+class Api::ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
+  
+  before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :current_resource_owner, if: :devise_controller?  
+  before_action :doorkeeper_authorize!
 
+  respond_to :json 
   before_action :setPrepare
   before_action :current_ability
 
@@ -36,5 +41,20 @@ class App::ApplicationController < ActionController::Base
       format.html { redirect_to dashboard_root_url }
       format.js   { head :forbidden, content_type: 'text/html' }
     end
+  end
+  
+  protected
+  
+  # Devise methods
+  # Authentication key(:username) and password field will be added automatically by devise.
+  def configure_permitted_parameters
+    added_attrs = [:email, :first_name, :last_name]
+    devise_parameter_sanitizer.permit :sign_up, keys: added_attrs
+    devise_parameter_sanitizer.permit :account_update, keys: added_attrs
+  end
+
+  # Doorkeeper methods
+  def current_resource_owner
+    User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
   end
 end

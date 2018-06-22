@@ -1,6 +1,7 @@
 require 'domain_constraint'
 
 Rails.application.routes.draw do
+  use_doorkeeper
   mount Wupee::Engine, at: "/wupee"
   devise_for :users, controllers: { sessions: 'users/sessions' }
 
@@ -8,7 +9,7 @@ Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
  
   scope module: 'dashboard' do
-    constraints DomainConstraint.new(['dashboard.mypocketconsultant.com', 'stagingdashboard.mypocketconsultant.com', 'dashboard.mypocketconsultant', 'mpcdashboard.smbstreamline.com.au']) do
+    constraints DomainConstraint.new(['dashboard.mypocketconsultant.app', 'stagingdashboard.mypocketconsultant.app', 'dashboard.mypocketconsultant', 'mpcdashboard.smbstreamline.com.au']) do
       
       root 'home#index', as: :dashboard_root
       get '/' => 'home#index', as: :dashboard_home
@@ -38,16 +39,26 @@ Rails.application.routes.draw do
     end
   end
 
-  scope module: 'app' do
-    constraints DomainConstraint.new(['app.mypocketconsultant.com', 'stagingapp.mypocketconsultant.com', 'app.mypocketconsultant', 'mpc.smbstreamline.com.au', '192.168.0.11']) do
-      
+  scope module: 'api' do
+    constraints DomainConstraint.new(['api.mypocketconsultant.app', 'stagingapi.mypocketconsultant.app', 'app.mypocketconsultant', 'mpc.smbstreamline.com.au', '192.168.0.11']) do
+      use_doorkeeper do
+        # No need to register client application
+        skip_controllers :applications, :authorized_applications
+      end
+
       root 'home#index', as: :app_root
       scope 'customer', defaults: { format: :json } do
-        get '/consultants' => 'public#consultants', as: :consultants
-        get '/customer_companies' => 'public#customer_companies', as: :customer_companies
-        get '/tutorials' => 'public#tutorials', as: :tutorials
+        post '/user' => 'public#user_details', as: :user_details
+        post '/consultants' => 'public#consultants', as: :consultants
+        post '/customer_companies' => 'public#customer_companies', as: :customer_companies
+        post '/tutorials' => 'public#tutorials', as: :tutorials
         put '/toggle_company' => 'public#toggle_company', as: :toggle_company
         put '/select_consultant' => 'public#select_consultant', as: :select_consultant
+
+        devise_for :users, controllers: {
+           registrations: 'api/customer/registrations',
+        }, skip: [:sessions, :password]
+
       end
     end
   end
