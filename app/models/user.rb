@@ -45,8 +45,8 @@ class User < ApplicationRecord
           id: company.id, 
           enabled: enabled,
           consultantId: nil,
-          first_name: nil,
-          last_name: nil,
+          firstName: nil,
+          lastName: nil,
           email: nil,
           phone: nil,
           websiteUrl: nil,
@@ -57,8 +57,8 @@ class User < ApplicationRecord
         if enabled && !user_companies.find{|uc| uc.company_id == company.id}.consultant.nil?
           consultant = user_companies.find{|uc| uc.company_id == company.id}.consultant
           subscription = consultant.subscriptions.find_by_company_id(company.id)
-          result[:last_name] = consultant.last_name
-          result[:first_name] = consultant.first_name
+          result[:lastName] = consultant.last_name
+          result[:firstName] = consultant.first_name
           result[:email] = consultant.email
           result[:phone] = consultant.phone
           result[:consultantId] = consultant.id

@@ -1,14 +1,17 @@
 class Api::PublicController < Api::ApplicationController
 
+  before_action :doorkeeper_authorize!, except: [:register]
+
   def consultants
+
     respond_to do |format| 
       format.json {
         render json: {
           results: User.joins(:roles).where('roles.id = ?', Role.find_by_name('consultant')).map do |u|
             {
               id: u.id,
-              first_name: u.first_name,
-              last_name: u.last_name,
+              firstName: u.first_name,
+              lastName: u.last_name,
               suburb: u.address.suburb,
               state: u.address.state,
               country: u.address.country.name,
@@ -18,6 +21,24 @@ class Api::PublicController < Api::ApplicationController
         }
       }
     end
+  end
+
+  def register
+    # TODO Validation
+    user = User.create(
+      username: params[:username],
+      first_name: params[:firstName],
+      last_name: params[:lastName],
+      email: params[:username],
+      password: params[:password],
+    )
+    user.address = Address.create(postcode: params[:postcode])
+    user.save!
+
+    user = User.last
+    access_token = Doorkeeper::AccessToken.create!(:resource_owner_id => user.id)
+    
+    render json: { access_token: Doorkeeper::OAuth::TokenResponse.new(access_token).body.to_json }
   end
 
   def tutorials
@@ -55,7 +76,7 @@ class Api::PublicController < Api::ApplicationController
     user = current_resource_owner
     respond_to do |format| 
       format.json {
-        render json: {results: { id: user.id, first_name: user.first_name, last_name: user.last_name } }
+        render json: {results: { id: user.id, firstName: user.first_name, lastName: user.last_name } }
       }
     end
   end

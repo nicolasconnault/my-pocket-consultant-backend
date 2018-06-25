@@ -5,7 +5,6 @@ class Api::ApplicationController < ActionController::Base
   
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :current_resource_owner, if: :devise_controller?  
-  before_action :doorkeeper_authorize!
 
   respond_to :json 
   before_action :setPrepare
