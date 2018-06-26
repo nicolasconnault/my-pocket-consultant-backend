@@ -62,9 +62,11 @@ class User < ApplicationRecord
           result[:email] = consultant.email
           result[:phone] = consultant.phone
           result[:consultantId] = consultant.id
-          result[:websiteUrl] = subscription.website_url
-          result[:facebookUrl] = subscription.facebook_url
-          result[:twitterUrl] = subscription.twitter_url
+          if subscription
+            result[:websiteUrl] = subscription.website_url
+            result[:facebookUrl] = subscription.facebook_url
+            result[:twitterUrl] = subscription.twitter_url
+          end
         end
         result
       end
