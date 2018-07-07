@@ -1,0 +1,2 @@
+class NewsType < ApplicationRecord
+end

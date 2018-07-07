@@ -71,12 +71,39 @@ class Api::PublicController < Api::ApplicationController
       }
     end
   end
-  
+ 
+  def notifications
+    user = current_resource_owner
+    respond_to do |format| 
+      format.json {
+        render json: {results: user.notifications_by_company }
+      }
+    end
+  end
+
+  def news_types
+    user = current_resource_owner
+    respond_to do |format| 
+      format.json {
+        render json: {results: user.news_types.select(:id, :name, :label) }
+      }
+    end
+  end
+
   def user_details
     user = current_resource_owner
     respond_to do |format| 
       format.json {
-        render json: {results: { id: user.id, firstName: user.first_name, lastName: user.last_name } }
+        render json: {results: { 
+          id: user.id, 
+          firstName: user.first_name, 
+          lastName: user.last_name,
+          street: user.street1,
+          suburb: user.suburb,
+          postcode: user.postcode,
+          country: user.country,
+          state: user.state
+        } }
       }
     end
   end

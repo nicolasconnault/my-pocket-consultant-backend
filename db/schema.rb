@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180621234219) do
+ActiveRecord::Schema.define(version: 20180705234726) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,15 @@ ActiveRecord::Schema.define(version: 20180621234219) do
     t.string "label", limit: 64, null: false
   end
 
+  create_table "company_news_types", force: :cascade do |t|
+    t.integer  "news_type_id"
+    t.integer  "company_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["company_id"], name: "index_company_news_types_on_company_id", using: :btree
+    t.index ["news_type_id"], name: "index_company_news_types_on_news_type_id", using: :btree
+  end
+
   create_table "company_tutorials", force: :cascade do |t|
     t.integer  "company_id"
     t.string   "title",                null: false
@@ -60,6 +69,37 @@ ActiveRecord::Schema.define(version: 20180621234219) do
     t.string   "code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "news_items", force: :cascade do |t|
+    t.integer  "news_type_id"
+    t.integer  "subscription_id"
+    t.string   "title"
+    t.string   "description"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.boolean  "active",          default: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.index ["news_type_id"], name: "index_news_items_on_news_type_id", using: :btree
+    t.index ["subscription_id"], name: "index_news_items_on_subscription_id", using: :btree
+  end
+
+  create_table "news_types", force: :cascade do |t|
+    t.string   "name"
+    t.string   "label"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "news_item_id"
+    t.date     "date_read"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["news_item_id"], name: "index_notifications_on_news_item_id", using: :btree
+    t.index ["user_id"], name: "index_notifications_on_user_id", using: :btree
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
@@ -243,6 +283,15 @@ ActiveRecord::Schema.define(version: 20180621234219) do
     t.index ["user_id"], name: "index_user_companies_on_user_id", using: :btree
   end
 
+  create_table "users_company_news_types", force: :cascade do |t|
+    t.integer  "news_type_id"
+    t.integer  "users_company_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.index ["news_type_id"], name: "index_users_company_news_types_on_news_type_id", using: :btree
+    t.index ["users_company_id"], name: "index_users_company_news_types_on_users_company_id", using: :btree
+  end
+
   create_table "users_roles", id: false, force: :cascade do |t|
     t.integer "user_id"
     t.integer "role_id"
@@ -282,8 +331,14 @@ ActiveRecord::Schema.define(version: 20180621234219) do
 
   add_foreign_key "addresses", "countries"
   add_foreign_key "companies", "company_categories"
+  add_foreign_key "company_news_types", "companies"
+  add_foreign_key "company_news_types", "news_types"
   add_foreign_key "company_tutorials", "companies"
   add_foreign_key "company_tutorials", "tutorial_categories", name: "tutorial_category_fk_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "news_items", "news_types"
+  add_foreign_key "news_items", "subscriptions"
+  add_foreign_key "notifications", "news_items"
+  add_foreign_key "notifications", "users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "role_notification_types", "roles"
@@ -294,6 +349,8 @@ ActiveRecord::Schema.define(version: 20180621234219) do
   add_foreign_key "tutorial_steps", "company_tutorials"
   add_foreign_key "users_companies", "companies"
   add_foreign_key "users_companies", "users"
+  add_foreign_key "users_company_news_types", "news_types"
+  add_foreign_key "users_company_news_types", "users_companies"
   add_foreign_key "users_roles", "roles"
   add_foreign_key "users_roles", "users"
   add_foreign_key "wupee_notification_type_configurations", "wupee_notification_types", column: "notification_type_id"

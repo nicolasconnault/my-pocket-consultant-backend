@@ -21,17 +21,38 @@ class User < ApplicationRecord
   has_many :subscriptions
   has_many :subscribed_companies, class_name: "Company", source: :company, through: :subscriptions, foreign_key: :company_id
   has_many :subscriptions
-
+  has_many :notifications
+  has_many :news_types, through: :users_company_news_types
+  has_many :users_company_news_types, through: :users_companies
   has_one :address
   has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: ":placeholder"
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
+
+  def notifications_by_company
+    unread_notifications = notifications.where('date_read IS NULL')
+    companies_with_notifications = {}
+    unread_notifications.each do |n|
+      if companies_with_notifications[n.company.label].nil?
+        companies_with_notifications[n.company.label] = []
+      end
+
+      companies_with_notifications[n.company.label].push({
+        title: n.news_item.title,
+        description: n.news_item.description,
+        startDate: n.news_item.start_date,
+        endDate: n.news_item.end_date,
+        type: n.news_item.news_type.name
+      })
+    end
+    companies_with_notifications
+  end
 
   def customer_companies
     # Uncomment below commented code when we upgrade to category-organised companies
     # final_companies = {}
     final_companies = []
     user_companies = [] 
-    UsersCompany.where(user_id: self.id).each do |uc|
+    UsersCompany.where(user_id: self.id).order(enabled: :desc).each do |uc|
       user_companies.push uc 
     end
 
@@ -72,7 +93,7 @@ class User < ApplicationRecord
       end
     #end
 
-    final_companies
+    final_companies.sort_by { |c| c[:enabled] ? 0 : 1 }
   end
 
   def email_required?
@@ -81,6 +102,25 @@ class User < ApplicationRecord
 
   def password_required?
     false
+  end
+
+  def suburb
+    address.nil? ? nil : address.suburb
+  end
+  def state
+    address.nil? ? nil : address.state
+  end
+  def postcode
+    address.nil? ? nil : address.postcode
+  end
+  def postcode
+    address.nil? ? nil : address.postcode
+  end
+  def country
+    address.nil? ? nil : address.country.name
+  end
+  def street1
+    address.nil? ? nil : address.street1
   end
 
   def has_roles? role_names, operator = :or
