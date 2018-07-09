@@ -29,22 +29,15 @@ class User < ApplicationRecord
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
 
   def notifications_by_company
-    unread_notifications = notifications.where('date_read IS NULL')
-    companies_with_notifications = {}
-    unread_notifications.each do |n|
-      if companies_with_notifications[n.company.label].nil?
-        companies_with_notifications[n.company.label] = []
-      end
-
-      companies_with_notifications[n.company.label].push({
-        title: n.news_item.title,
-        description: n.news_item.description,
-        startDate: n.news_item.start_date,
-        endDate: n.news_item.end_date,
-        type: n.news_item.news_type.name
-      })
-    end
-    companies_with_notifications
+    notifications.where('date_read IS NULL').order(created_at: :desc).first(20).map { |n| {
+      title: n.news_item.title,
+      description: n.news_item.description,
+      startDate: n.news_item.start_date,
+      endDate: n.news_item.end_date,
+      type: n.news_item.news_type.name,
+      companyLabel: n.company.label,
+      companyId: n.company.id
+    }}
   end
 
   def news_types_by_company

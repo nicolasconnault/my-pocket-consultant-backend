@@ -55,8 +55,10 @@ Rails.application.routes.draw do
         post '/consultants' => 'public#consultants', as: :consultants
         post '/customer_companies' => 'public#customer_companies', as: :customer_companies
         post '/tutorials' => 'public#tutorials', as: :tutorials
+
         put '/toggle_company' => 'public#toggle_company', as: :toggle_company
         put '/select_consultant' => 'public#select_consultant', as: :select_consultant
+        put '/toggle_user_company_news_type' => 'public#toggle_user_company_news_type', as: :toggle_user_company_news_type
 
         devise_for :users, controllers: {
            registrations: 'api/customer/registrations',

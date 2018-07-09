@@ -149,6 +149,26 @@ class Api::PublicController < Api::ApplicationController
     end
   end
 
+  def toggle_user_company_news_type
+    user = current_resource_owner
+    if params[:oldValue] == true
+      if users_company = UsersCompany.where(user_id: user.id, company_id: params[:companyId]).first
+        users_company.users_company_news_types.where(news_type_id: params[:newsTypeId]).first.destroy
+      end
+    else
+      if users_company = UsersCompany.where(user_id: user.id, company_id: params[:companyId]).first 
+        users_company.users_company_news_types.push UsersCompanyNewsType.create(news_type_id: params[:newsTypeId])
+      end
+    end
+
+    respond_to do |format| 
+      format.json {
+        render json: {results: user.news_types_by_company }
+      }
+    end
+
+  end
+
   private
 
   def current_resource_owner
