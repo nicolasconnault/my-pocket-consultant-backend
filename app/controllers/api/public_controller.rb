@@ -85,7 +85,7 @@ class Api::PublicController < Api::ApplicationController
     user = current_resource_owner
     respond_to do |format| 
       format.json {
-        render json: {results: user.news_types.select(:id, :name, :label) }
+        render json: {results: user.news_types_by_company }
       }
     end
   end

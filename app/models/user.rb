@@ -47,6 +47,40 @@ class User < ApplicationRecord
     companies_with_notifications
   end
 
+  def news_types_by_company
+    sql = '
+      SELECT 
+      c.label AS "company_label",
+      c.id AS "companyId",
+      nt.id AS "id",
+      nt.label AS "label",
+      CASE WHEN nt.id IN (SELECT news_type_id FROM users_company_news_types ucnt WHERE ucnt.users_company_id = uc.id) THEN true ELSE false END AS "status"
+
+      FROM users
+
+      LEFT JOIN users_companies uc ON uc.user_id = users.id
+      LEFT JOIN companies c ON c.id = uc.company_id
+      LEFT JOIN company_news_types cnt ON c.id = cnt.company_id
+      RIGHT OUTER JOIN news_types nt ON nt.id = cnt.news_type_id
+
+      WHERE users.id = ' + self.id.to_s + '
+      ORDER BY status DESC'
+    hash = ActiveRecord::Base.connection.exec_query(sql).to_hash
+    news_types_object = {}
+
+    hash.each do |h|
+      if news_types_object[h['company_label']].nil?
+        news_types_object[h['company_label']] = []
+      end
+      news_types_object[h['company_label']].push({
+        id: h['id'],
+        label: h['label'],
+        status: h['status']
+      })
+    end
+    news_types_object
+  end
+
   def customer_companies
     # Uncomment below commented code when we upgrade to category-organised companies
     # final_companies = {}
