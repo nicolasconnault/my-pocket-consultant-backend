@@ -60,6 +60,8 @@ Rails.application.routes.draw do
         put '/select_consultant' => 'public#select_consultant', as: :select_consultant
         put '/toggle_user_company_news_type' => 'public#toggle_user_company_news_type', as: :toggle_user_company_news_type
 
+        delete '/remove_notification' => 'public#remove_notification', as: :remove_notification
+
         devise_for :users, controllers: {
            registrations: 'api/customer/registrations',
         }, skip: [:sessions, :password]

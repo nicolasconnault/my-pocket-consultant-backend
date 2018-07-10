@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180705234726) do
+ActiveRecord::Schema.define(version: 20180710063530) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,6 +81,9 @@ ActiveRecord::Schema.define(version: 20180705234726) do
     t.boolean  "active",          default: false
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
+    t.string   "url"
+    t.float    "discountedPrice"
+    t.float    "regularPrice"
     t.index ["news_type_id"], name: "index_news_items_on_news_type_id", using: :btree
     t.index ["subscription_id"], name: "index_news_items_on_subscription_id", using: :btree
   end

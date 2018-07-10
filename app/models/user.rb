@@ -30,13 +30,21 @@ class User < ApplicationRecord
 
   def notifications_by_company
     notifications.where('date_read IS NULL').order(created_at: :desc).first(20).map { |n| {
-      title: n.news_item.title,
-      description: n.news_item.description,
-      startDate: n.news_item.start_date,
-      endDate: n.news_item.end_date,
-      type: n.news_item.news_type.name,
-      companyLabel: n.company.label,
-      companyId: n.company.id
+      id: n.id,
+      newsItem: {
+        title: n.news_item.title,
+        description: n.news_item.description,
+        startDate: n.news_item.start_date,
+        endDate: n.news_item.end_date,
+        type: n.news_item.news_type.name,
+        url: n.news_item.url,
+        id: n.news_item.id
+      },
+      company: {
+        name: n.company.name,
+        label: n.company.label,
+        id: n.company.id
+      },
     }}
   end
 

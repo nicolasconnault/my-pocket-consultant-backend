@@ -169,6 +169,17 @@ class Api::PublicController < Api::ApplicationController
 
   end
 
+  def remove_notification
+    if params[:notificationId]
+    user = current_resource_owner
+      Notification.find(params[:notificationId]).update_attribute(:date_read, Date.today)
+    end
+    respond_to do |format| 
+      format.json {
+        render json: {results: user.notifications_by_company }
+      }
+    end
+  end
   private
 
   def current_resource_owner
