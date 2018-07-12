@@ -38,7 +38,9 @@ class User < ApplicationRecord
         endDate: n.news_item.end_date,
         type: n.news_item.news_type.name,
         url: n.news_item.url,
-        id: n.news_item.id
+        id: n.news_item.id,
+        regularPrice: n.news_item.regularPrice,
+        discountedPrice: n.news_item.discountedPrice
       },
       company: {
         name: n.company.name,

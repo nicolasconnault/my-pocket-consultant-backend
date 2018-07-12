@@ -3,19 +3,18 @@ class Api::PublicController < Api::ApplicationController
   before_action :doorkeeper_authorize!, except: [:register]
 
   def consultants
-
     respond_to do |format| 
       format.json {
         render json: {
-          results: User.joins(:roles).where('roles.id = ?', Role.find_by_name('consultant')).map do |u|
+          results: Subscription.where(company_id: params[:companyId]).map do |s|
             {
-              id: u.id,
-              firstName: u.first_name,
-              lastName: u.last_name,
-              suburb: u.address.suburb,
-              state: u.address.state,
-              country: u.address.country.name,
-              companies: u.subscribed_companies.map {|c| { id: c.id, name: c.name, label: c.label } }
+              id: s.user.id,
+              firstName: s.user.first_name,
+              lastName: s.user.last_name,
+              suburb: s.user.address.suburb,
+              state: s.user.address.state,
+              country: s.user.address.country.name,
+              # companies: s.user.subscribed_companies.map {|c| { id: c.id, name: c.name, label: c.label } }
             }
           end
         }
@@ -86,6 +85,26 @@ class Api::PublicController < Api::ApplicationController
     respond_to do |format| 
       format.json {
         render json: {results: user.news_types_by_company }
+      }
+    end
+  end
+
+  def company_news_items
+    user = current_resource_owner
+    news_items = user.users_companies.find_by_company_id(params[:companyId]).consultant.subscriptions.map {|s| s.news_items.where(active: true)}
+    respond_to do |format| 
+      format.json {
+        render json: {results: news_items.map {|n| { 
+          title: n.title,
+          description: n.description,
+          startDate: n.start_date,
+          endDate: n.end_date,
+          type: n.news_type.name,
+          url: n.url,
+          id: n.id,
+          regularPrice: n.regularPrice,
+          discountedPrice: n.discountedPrice
+        } } }
       }
     end
   end

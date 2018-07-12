@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
-gem 'rails', '~> 5.0.2'
+gem 'rails', '~> 5.2.0'
 gem 'sass-rails', '~> 5.0'
-gem 'activerecord-import', '>= 0.11.0'
+gem 'activerecord-import'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
@@ -40,8 +40,7 @@ gem 'holidays'
 gem 'htmlentities'
 gem 'jbuilder'
 gem 'multi_json'
-gem 'jquery-datatables-rails', '~> 3.4.0'
-gem 'ajax-datatables-rails', '~> 0.4.0'
+gem 'ajax-datatables-rails'
 gem 'jquery-minicolors-rails'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
@@ -63,13 +62,13 @@ gem 'rails-push-notifications', '~> 0.2.0'
 gem 'redis'
 gem 'rolify'
 gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'second_level_cache', '~> 2.3.0'
+gem 'second_level_cache'
 gem 'seed_dump'
-# gem 'select2-rails'
+gem 'select2-rails'
 gem 'sidekiq'
 gem 'silencer'
 gem 'simple_form'
-gem 'simple_form_fancy_uploads'
+# gem 'simple_form_fancy_uploads' # incompatible with simple_form 4
 gem 'simple-navigation'
 gem 'switchery-rails'
 gem 'therubyracer'
@@ -94,10 +93,10 @@ end
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  gem 'listen', '~> 3.0.5'
+  gem 'listen'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'spring-watcher-listen'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
