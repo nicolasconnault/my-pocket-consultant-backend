@@ -48,6 +48,7 @@ Rails.application.routes.draw do
 
       root 'home#index', as: :app_root
       scope 'customer', defaults: { format: :json } do
+        post '/company_news_items' => 'public#company_news_items', as: :company_news_items
         post '/news_types' => 'public#news_types', as: :news_types
         post '/notifications' => 'public#notifications', as: :user_notifications
         post '/register' => 'public#register', as: :register

@@ -91,7 +91,13 @@ class Api::PublicController < Api::ApplicationController
 
   def company_news_items
     user = current_resource_owner
-    news_items = user.users_companies.find_by_company_id(params[:companyId]).consultant.subscriptions.map {|s| s.news_items.where(active: true)}
+    news_items = []
+    user.users_companies.find_by_company_id(params[:companyId]).consultant.subscriptions.each do |s| 
+      s.news_items.where(active: true).each do |ni|
+        news_items.push ni
+      end
+    end
+
     respond_to do |format| 
       format.json {
         render json: {results: news_items.map {|n| { 
