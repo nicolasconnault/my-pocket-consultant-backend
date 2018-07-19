@@ -31,13 +31,39 @@ class Api::PublicController < Api::ApplicationController
       email: params[:username],
       password: params[:password],
     )
-    user.address = Address.create(postcode: params[:postcode])
+    country = Country.find_by_code(params[:countryCode])
+    unless country.nil? || params[:timeZone].nil?
+      user.address = Address.create(postcode: params[:postcode], country: country, timezone: params[:timeZone])
+    end
     user.save!
 
     user = User.last
     access_token = Doorkeeper::AccessToken.create!(:resource_owner_id => user.id)
+    render json: { access_token: Doorkeeper::OAuth::TokenResponse.new(access_token).body["access_token"] }
+  end
+
+  def update_profile
+    user = current_resource_owner
     
-    render json: { access_token: Doorkeeper::OAuth::TokenResponse.new(access_token).body.to_json }
+    # TODO handle change of email address
+    # TODO handle change of password
+    #
+    user.update_attributes(
+      username: params[:username],
+      first_name: params[:firstName],
+      last_name: params[:lastName],
+      email: params[:username],
+      password: params[:password]
+    )
+
+    if user.address.nil?
+      user.address = Address.create(
+        street1: params[:street],
+        postcode: params[:postcode],
+        suburb: params[:suburb]
+      )
+    end
+
   end
 
   def tutorials
@@ -119,16 +145,27 @@ class Api::PublicController < Api::ApplicationController
     user = current_resource_owner
     respond_to do |format| 
       format.json {
-        render json: {results: { 
-          id: user.id, 
-          firstName: user.first_name, 
-          lastName: user.last_name,
-          street: user.street1,
-          suburb: user.suburb,
-          postcode: user.postcode,
-          country: user.country,
-          state: user.state
-        } }
+        country_object = (user.address.nil?) ? { code: nil } : {
+          id: user.address.country.id,
+          name: user.address.country.name,
+          code: user.address.country.code
+        }
+
+        render json: {
+          results: { 
+            id: user.id, 
+            username: user.email,
+            firstName: user.first_name, 
+            lastName: user.last_name,
+            street: user.street1,
+            suburb: user.suburb,
+            postcode: user.postcode,
+            state: user.state,
+            phone: user.phone,
+            country: country_object,
+            countryCode: country_object[:code]
+          } 
+        }
       }
     end
   end
