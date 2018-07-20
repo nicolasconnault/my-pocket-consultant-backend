@@ -42,12 +42,11 @@ class Api::PublicController < Api::ApplicationController
     render json: { access_token: Doorkeeper::OAuth::TokenResponse.new(access_token).body["access_token"] }
   end
 
-  def update_profile
+  def save_profile
     user = current_resource_owner
     
     # TODO handle change of email address
     # TODO handle change of password
-    #
     user.update_attributes(
       username: params[:username],
       first_name: params[:firstName],
@@ -60,10 +59,16 @@ class Api::PublicController < Api::ApplicationController
       user.address = Address.create(
         street1: params[:street],
         postcode: params[:postcode],
-        suburb: params[:suburb]
+        suburb: params[:suburb],
+      )
+    else
+      user.address.update_attributes(
+        street1: params[:street],
+        postcode: params[:postcode],
+        suburb: params[:suburb],
       )
     end
-
+    user_details
   end
 
   def tutorials
