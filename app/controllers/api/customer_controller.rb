@@ -1,4 +1,4 @@
-class Api::PublicController < Api::ApplicationController
+class Api::CustomerController < Api::ApplicationController
 
   before_action :doorkeeper_authorize!, except: [:register]
 

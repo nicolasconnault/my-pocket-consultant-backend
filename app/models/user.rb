@@ -16,14 +16,13 @@ class User < ApplicationRecord
   include Wupee::Receiver
 
   has_many :companies, through: :users_companies, foreign_key: :user_id
-  has_many :consultant_companies, class_name: "Company", source: :company, through: :users_companies, foreign_key: :consultant_id
   has_many :users_companies
+  has_many :consultant_companies, class_name: "Company", source: :company, through: :users_companies, foreign_key: :consultant_id
   has_many :subscriptions
-  has_many :subscribed_companies, class_name: "Company", source: :company, through: :subscriptions, foreign_key: :company_id
-  has_many :subscriptions
+  has_many :subscribed_companies, class_name: "Company", source: :company, through: :subscriptions, foreign_key: :user_id
   has_many :notifications
-  has_many :news_types, through: :users_company_news_types
   has_many :users_company_news_types, through: :users_companies
+  has_many :news_types, through: :users_company_news_types
   has_one :address
   has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: ":placeholder"
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/

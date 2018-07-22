@@ -48,26 +48,30 @@ Rails.application.routes.draw do
 
       root 'home#index', as: :app_root
       scope 'customer', defaults: { format: :json } do
-        post '/company_news_items' => 'public#company_news_items', as: :company_news_items
-        post '/news_types' => 'public#news_types', as: :news_types
-        post '/notifications' => 'public#notifications', as: :user_notifications
-        post '/register' => 'public#register', as: :register
-        post '/user' => 'public#user_details', as: :user_details
-        post '/consultants' => 'public#consultants', as: :consultants
-        post '/customer_companies' => 'public#customer_companies', as: :customer_companies
-        post '/tutorials' => 'public#tutorials', as: :tutorials
+        post '/company_news_items' => 'customer#company_news_items', as: :company_news_items
+        post '/news_types' => 'customer#news_types', as: :news_types
+        post '/notifications' => 'customer#notifications', as: :user_notifications
+        post '/register' => 'customer#register', as: :register
+        post '/user' => 'customer#user_details', as: :user_details
+        post '/consultants' => 'customer#consultants', as: :consultants
+        post '/customer_companies' => 'customer#customer_companies', as: :customer_companies
+        post '/tutorials' => 'customer#tutorials', as: :tutorials
 
-        put '/save_profile' => 'public#save_profile', as: :save_profile
-        put '/toggle_company' => 'public#toggle_company', as: :toggle_company
-        put '/select_consultant' => 'public#select_consultant', as: :select_consultant
-        put '/toggle_user_company_news_type' => 'public#toggle_user_company_news_type', as: :toggle_user_company_news_type
+        put '/save_profile' => 'customer#save_profile', as: :save_profile
+        put '/toggle_company' => 'customer#toggle_company', as: :toggle_company
+        put '/select_consultant' => 'customer#select_consultant', as: :select_consultant
+        put '/toggle_user_company_news_type' => 'customer#toggle_user_company_news_type', as: :toggle_user_company_news_type
 
-        delete '/remove_notification' => 'public#remove_notification', as: :remove_notification
+        delete '/remove_notification' => 'customer#remove_notification', as: :remove_notification
 
         devise_for :users, controllers: {
            registrations: 'api/customer/registrations',
         }, skip: [:sessions, :password]
 
+      end
+
+      scope 'consultant', defaults: { format: :json } do 
+        post '/subscribed_companies' => 'consultant#subscribed_companies', as: :subscribed_companies
       end
     end
   end
