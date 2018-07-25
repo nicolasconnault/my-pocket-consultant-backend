@@ -36,13 +36,29 @@ class Api::ConsultantController < Api::ApplicationController
     respond_to do |format| 
       format.json {
         render json: { 
-          results: user.subscribed_companies.map do |c| 
+          results: user.subscriptions.map do |s| 
             {
-              name: c.name, 
-              label: c.label, 
-              id: c.id 
+              id: s.id,
+              companyName: s.company.name, 
+              companyLabel: s.company.label, 
+              companyId: s.company.id,
+              customerCount: s.customers.count,
+              active: s.active,
+              websiteUrl: s.website_url,
+              facebookUrl: s.facebook_url,
+              twitterUrl: s.twitter_url
             }
           end
+        }
+      }
+    end
+  end
+  
+  def category_companies
+    respond_to do |format| 
+      format.json {
+        render json: { 
+          results: Company.joins(:company_category).group_by(&:company_category_label)
         }
       }
     end
