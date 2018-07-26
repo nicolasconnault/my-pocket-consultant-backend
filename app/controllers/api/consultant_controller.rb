@@ -46,7 +46,35 @@ class Api::ConsultantController < Api::ApplicationController
               active: s.active,
               websiteUrl: s.website_url,
               facebookUrl: s.facebook_url,
-              twitterUrl: s.twitter_url
+              twitterUrl: s.twitter_url,
+              newsItems: s.news_items.map {|ni| {
+                id: ni.id,
+                newsType: {
+                  id: ni.news_type.id,
+                  name: ni.news_type.name,
+                  label: ni.news_type.label,
+                },
+                title: ni.title,
+                description: ni.description,
+                startDate: ni.start_date,
+                endDate: ni.end_date,
+                active: ni.active,
+                url: ni.url,
+                discountedPrice: ni.discountedPrice,
+                regularPrice: ni.regularPrice
+              }},
+
+              tutorials: s.company.company_tutorials.map {|t| {
+                id: t.id,
+                title: t.title,
+                steps: t.tutorial_steps.map {|ts| {
+                  id: ts.id,
+                  title: ts.title,
+                  number: ts.sort_order,
+                  video: ts.video,
+                  description: ts.description,
+                }}
+              }},
             }
           end
         }
