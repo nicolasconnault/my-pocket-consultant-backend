@@ -85,16 +85,14 @@ class User < ApplicationRecord
 
   def customer_companies
     # Uncomment below commented code when we upgrade to category-organised companies
-    # final_companies = {}
-    final_companies = []
+    final_companies = {}
     user_companies = [] 
     UsersCompany.where(user_id: self.id).order(enabled: :desc).each do |uc|
       user_companies.push uc 
     end
 
-    # Company.includes(:company_category).all.group_by(&:company_category).each do |category, companies|
-      # final_companies[category.name] = companies.map do |company| 
-      final_companies = Company.all.map do |company| 
+    Company.includes(:company_category).all.group_by(&:company_category).each do |category, companies|
+      full_companies = companies.map do |company| 
         enabled = user_companies.any?{|uc| uc.company.id == company.id && uc.enabled == true}
         result = { 
           name: company.name, 
@@ -127,9 +125,10 @@ class User < ApplicationRecord
         end
         result
       end
-    #end
+      final_companies[category.name] = full_companies.sort_by { |c| c[:enabled] ? 0 : 1 }
+    end
 
-    final_companies.sort_by { |c| c[:enabled] ? 0 : 1 }
+    final_companies
   end
 
   def email_required?
