@@ -7,13 +7,22 @@ class Api::CustomerController < Api::ApplicationController
       format.json {
         render json: {
           results: Subscription.where(company_id: params[:companyId]).map do |s|
+            country_object = (s.user.address.nil?) ? { code: nil } : {
+              id: s.user.address.country.id,
+              name: s.user.address.country.name,
+              code: s.user.address.country.code
+            }
             {
               id: s.user.id,
+              username: s.user.email,
               firstName: s.user.first_name,
               lastName: s.user.last_name,
-              suburb: s.user.address.suburb,
-              state: s.user.address.state,
-              country: s.user.address.country.name,
+              street: s.user.street1,
+              suburb: s.user.suburb,
+              postcode: s.user.postcode,
+              state: s.user.state,
+              phone: s.user.phone,
+              country: country_object,
               # companies: s.user.subscribed_companies.map {|c| { id: c.id, name: c.name, label: c.label } }
             }
           end

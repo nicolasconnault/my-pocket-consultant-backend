@@ -66,7 +66,7 @@ class User < ApplicationRecord
       RIGHT OUTER JOIN news_types nt ON nt.id = cnt.news_type_id
 
       WHERE users.id = ' + self.id.to_s + '
-      ORDER BY status DESC'
+      ORDER BY nt.label ASC'
     hash = ActiveRecord::Base.connection.exec_query(sql).to_hash
     news_types_object = {}
 
@@ -152,7 +152,7 @@ class User < ApplicationRecord
     address.nil? ? nil : address.postcode
   end
   def country
-    address.nil? ? nil : address.country.name
+    address.nil? ? nil : address.country
   end
   def street1
     address.nil? ? nil : address.street1
