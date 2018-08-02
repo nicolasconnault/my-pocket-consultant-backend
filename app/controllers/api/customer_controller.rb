@@ -17,6 +17,7 @@ class Api::CustomerController < Api::ApplicationController
               username: s.user.email,
               firstName: s.user.first_name,
               lastName: s.user.last_name,
+              name: "#{s.user.last_name} #{s.user.first_name}",
               street: s.user.street1,
               suburb: s.user.suburb,
               postcode: s.user.postcode,

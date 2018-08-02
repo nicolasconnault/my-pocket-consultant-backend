@@ -75,6 +75,28 @@ class Api::ConsultantController < Api::ApplicationController
                   description: ts.description,
                 }}
               }},
+
+              customers: s.customers.map {|c| 
+                
+                country_object = (c.address.nil?) ? { code: nil } : {
+                  id: c.address.country.id,
+                  name: c.address.country.name,
+                  code: c.address.country.code
+                }
+                {
+                  id: c.id,
+                  username: c.email,
+                  firstName: c.first_name,
+                  lastName: c.last_name,
+                  name: "#{c.last_name} #{c.first_name}",
+                  street: c.street1,
+                  suburb: c.suburb,
+                  postcode: c.postcode,
+                  state: c.state,
+                  phone: c.phone,
+                  country: country_object,
+                }
+              },
             }
           end
         }
