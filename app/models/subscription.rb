@@ -1,6 +1,7 @@
 class Subscription < ApplicationRecord
   belongs_to :company
   belongs_to :user
+  # TODO belongs to customers through subscription_users
   has_many :news_items
 
   def customers

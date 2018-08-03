@@ -132,16 +132,10 @@ class Api::CustomerController < Api::ApplicationController
 
   def company_news_items
     user = current_resource_owner
-    news_items = []
-    user.users_companies.find_by_company_id(params[:companyId]).consultant.subscriptions.each do |s| 
-      s.news_items.where(active: true).each do |ni|
-        news_items.push ni
-      end
-    end
 
     respond_to do |format| 
       format.json {
-        render json: {results: news_items.map {|n| { 
+        render json: {results: user.company_news_items(params[:companyId]).map {|n| { 
           title: n.title,
           description: n.description,
           startDate: n.start_date,
@@ -226,13 +220,13 @@ class Api::CustomerController < Api::ApplicationController
     end
   end
 
-  def toggle_user_company_news_type
+  # Currently broken: Instead of sending the company_id, which isn't enough info, we need to send the subscription ID
+  def toggle_subscription_user_news_type
     user = current_resource_owner
     if params[:oldValue] == true
-      if users_company = UsersCompany.where(user_id: user.id, company_id: params[:companyId]).first
-        users_company.users_company_news_types.where(news_type_id: params[:newsTypeId]).first.destroy
-      end
+      user.remove_subscription_news_type(params[:companyId], params[:newsTypeId])
     else
+      user.add_subscription_news_type(params[:companyId], params[:newsTypeId])
       if users_company = UsersCompany.where(user_id: user.id, company_id: params[:companyId]).first 
         users_company.users_company_news_types.push UsersCompanyNewsType.create(news_type_id: params[:newsTypeId])
       end

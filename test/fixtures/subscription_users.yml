@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  subscription: one
+  user: one
+  potential_recruit: false
+  potential_host: false
+  current_host: false
+
+two:
+  subscription: two
+  user: two
+  potential_recruit: false
+  potential_host: false
+  current_host: false

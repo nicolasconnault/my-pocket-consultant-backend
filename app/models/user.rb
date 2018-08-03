@@ -15,14 +15,12 @@ class User < ApplicationRecord
 
   include Wupee::Receiver
 
-  has_many :companies, through: :users_companies, foreign_key: :user_id
-  has_many :users_companies
-  has_many :consultant_companies, class_name: "Company", source: :company, through: :users_companies, foreign_key: :consultant_id
+  has_many :subscription_users
   has_many :subscriptions
   has_many :subscribed_companies, class_name: "Company", source: :company, through: :subscriptions, foreign_key: :user_id
   has_many :notifications
-  has_many :users_company_news_types, through: :users_companies
-  has_many :news_types, through: :users_company_news_types
+  has_many :subscription_user_news_types, through: :subscription_users
+  has_many :news_types, through: :subscription_user_news_types
   has_one :address
   has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: ":placeholder"
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
@@ -49,6 +47,24 @@ class User < ApplicationRecord
     }}
   end
 
+  def company_news_items company_id
+    news_items = []
+    self.subscription_users.all.each do |su|
+      if su.subscription.company_id == company_id
+        su.subscription.news_items.where(active: true).each do |ni|
+          news_items.push ni
+        end 
+      end
+    end
+    news_items
+  end
+
+  def remove_subscription_news_type company_id, news_type_id
+    if subscription = self.subscriptions.where(user_id: self.id, company_id: company_id).first
+      users_company.users_company_news_types.where(news_type_id: params[:newsTypeId]).first.destroy
+    end
+  end
+
   def news_types_by_company
     sql = '
       SELECT 
@@ -56,12 +72,13 @@ class User < ApplicationRecord
       c.id AS "companyId",
       nt.id AS "id",
       nt.label AS "label",
-      CASE WHEN nt.id IN (SELECT news_type_id FROM users_company_news_types ucnt WHERE ucnt.users_company_id = uc.id) THEN true ELSE false END AS "status"
+      CASE WHEN nt.id IN (SELECT news_type_id FROM subscription_user_news_types sunt WHERE sunt.subscription_user_id = su.id) THEN true ELSE false END AS "status"
 
       FROM users
 
-      LEFT JOIN users_companies uc ON uc.user_id = users.id
-      LEFT JOIN companies c ON c.id = uc.company_id
+      LEFT JOIN subscription_users su ON su.user_id = users.id
+      LEFT JOIN subscriptions s ON s.id = su.subscription_id
+      LEFT JOIN companies c ON c.id = s.company_id
       LEFT JOIN company_news_types cnt ON c.id = cnt.company_id
       RIGHT OUTER JOIN news_types nt ON nt.id = cnt.news_type_id
 

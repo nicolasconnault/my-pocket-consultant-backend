@@ -60,7 +60,7 @@ Rails.application.routes.draw do
         put '/save_profile' => 'customer#save_profile', as: :save_profile
         put '/toggle_company' => 'customer#toggle_company', as: :toggle_company
         put '/select_consultant' => 'customer#select_consultant', as: :select_consultant
-        put '/toggle_user_company_news_type' => 'customer#toggle_user_company_news_type', as: :toggle_user_company_news_type
+        put '/toggle_user_company_news_type' => 'customer#toggle_subscription_user_news_type', as: :toggle_subscription_user_news_type
 
         delete '/remove_notification' => 'customer#remove_notification', as: :remove_notification
 
