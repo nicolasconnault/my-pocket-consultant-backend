@@ -76,8 +76,8 @@ class Api::ConsultantController < Api::ApplicationController
                 }}
               }},
 
-              customers: s.customers.map {|c| 
-                
+              customers: s.subscription_users.map {|su| 
+                c = su.user
                 country_object = (c.address.nil?) ? { code: nil } : {
                   id: c.address.country.id,
                   name: c.address.country.name,
@@ -85,6 +85,7 @@ class Api::ConsultantController < Api::ApplicationController
                 }
                 {
                   id: c.id,
+                  subscriptionUserId: su.id,
                   username: c.email,
                   firstName: c.first_name,
                   lastName: c.last_name,
@@ -93,8 +94,19 @@ class Api::ConsultantController < Api::ApplicationController
                   suburb: c.suburb,
                   postcode: c.postcode,
                   state: c.state,
+                  potentialRecruit: su.potential_recruit,
+                  potentialHost: su.potential_host,
+                  currentHost: su.current_host,
                   phone: c.phone,
+                  email: c.email,
                   country: country_object,
+                  notes: su.subscription_user_notes.map {|n|
+                    {
+                      id: n.id,
+                      note: n.note,
+                      createdAt: n.created_at
+                    }
+                  }
                 }
               },
             }
