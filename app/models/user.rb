@@ -19,6 +19,7 @@ class User < ApplicationRecord
   has_many :subscriptions
   has_many :subscribed_companies, class_name: "Company", source: :company, through: :subscriptions, foreign_key: :user_id
   has_many :notifications
+  has_many :subscription_user_call_reminders, through: :subscription_users
   has_many :subscription_user_news_types, through: :subscription_users
   has_many :news_types, through: :subscription_user_news_types
   has_one :address

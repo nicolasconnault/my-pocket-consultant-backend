@@ -73,6 +73,8 @@ Rails.application.routes.draw do
       scope 'consultant', defaults: { format: :json } do 
         post '/subscribed_companies' => 'consultant#subscribed_companies', as: :subscribed_companies
         post '/category_companies' => 'consultant#category_companies', as: :category_companies
+        post '/call_reminders' => 'consultant#call_reminders', as: :call_reminders
+        put '/create_call_reminder' => 'customer#create_call_reminder', as: :create_call_reminder
       end
     end
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_03_071648) do
+ActiveRecord::Schema.define(version: 2018_09_03_203204) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -209,6 +209,15 @@ ActiveRecord::Schema.define(version: 2018_08_03_071648) do
     t.datetime "updated_at"
   end
 
+  create_table "subscription_user_call_reminders", force: :cascade do |t|
+    t.bigint "subscription_user_id"
+    t.string "title"
+    t.date "call_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subscription_user_id"], name: "index_subscription_user_call_reminders_on_subscription_user_id"
+  end
+
   create_table "subscription_user_news_types", force: :cascade do |t|
     t.bigint "subscription_user_id"
     t.bigint "news_type_id"
@@ -375,6 +384,7 @@ ActiveRecord::Schema.define(version: 2018_08_03_071648) do
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "role_notification_types", "roles"
   add_foreign_key "role_notification_types", "wupee_notification_types"
+  add_foreign_key "subscription_user_call_reminders", "subscription_users"
   add_foreign_key "subscription_user_news_types", "news_types"
   add_foreign_key "subscription_user_news_types", "subscription_users"
   add_foreign_key "subscription_user_notes", "subscription_users"

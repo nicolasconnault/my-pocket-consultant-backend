@@ -125,6 +125,39 @@ class Api::ConsultantController < Api::ApplicationController
       }
     end
   end
+ 
+  def create_call_reminder
+    user = current_resource_owner 
+    subscription_id = params[:subscriptionId]
+    customer_id = params[:customerId]
+    title = params[:title]
+    call_date = params[:callDate]
+
+    su = SubscriptionUser.where(subscription_id: subscription_id, user_id: customer_id).first
+    if (su) 
+      cr = SubscriptionUserCallReminder.create(subscription_user: su, title: title, call_date: call_date)
+    else 
+    end
+    # TODO Send back a success/error message
+  end
+
+  def call_reminders
+    user = current_resource_owner
+    respond_to do |format| 
+      format.json {
+        render json: { 
+          results: user.subscription_user_call_reminders.order(:call_date).map {|call_reminder|
+            {
+              title: call_reminder.title,
+              callDate: call_reminder.call_date,
+              customerName: call_reminder.subscription_user.user.full_name,
+              phone: call_reminder.subscription_user.user.phone
+            }
+          }
+        }
+      }
+    end
+  end
 
   def current_resource_owner
     User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
