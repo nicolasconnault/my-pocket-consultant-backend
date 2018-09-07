@@ -73,11 +73,18 @@ Rails.application.routes.draw do
       scope 'consultant', defaults: { format: :json } do 
         post '/subscribed_companies' => 'consultant#subscribed_companies', as: :subscribed_companies
         post '/category_companies' => 'consultant#category_companies', as: :category_companies
+
         post '/call_reminders' => 'consultant#call_reminders', as: :call_reminders
         put '/create_call_reminder' => 'consultant#create_call_reminder', as: :create_call_reminder
+
         put '/create_customer_note' => 'consultant#create_customer_note', as: :create_customer_note
         put '/update_customer_note' => 'consultant#update_customer_note', as: :update_customer_note
         delete '/remove_customer_note' => 'consultant#remove_customer_note', as: :remove_customer_note
+        
+        put '/create_news_item' => 'consultant#create_news_item', as: :create_news_item
+        put '/update_news_item' => 'consultant#update_news_item', as: :update_news_item
+        delete '/remove_news_item' => 'consultant#remove_news_item', as: :remove_news_item
+        put '/toggle_news_item' => 'consultant#toggle_news_item', as: :toggle_news_item
       end
     end
   end

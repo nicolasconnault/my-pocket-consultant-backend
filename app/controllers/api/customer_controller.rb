@@ -121,6 +121,11 @@ class Api::CustomerController < Api::ApplicationController
     end
   end
 
+  # Some news types only apply to some companies, so we retrieve the news types organised by company
+  # e.g., [
+  #         'Scentsy': [{id: 5, label: 'exclusive Products', status: true}, {id: 6, label: 'New Products', status: true}],
+  #         'Enjo': [{id: 5, label: 'exclusive Products', status: true}, {id: 6, label: 'New Products', status: true}],
+  #       ]
   def news_types
     user = current_resource_owner
     respond_to do |format| 

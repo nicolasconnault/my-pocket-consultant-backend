@@ -170,6 +170,67 @@ class Api::ConsultantController < Api::ApplicationController
     # TODO Send back a success/error message
   end
 
+  # NEWS ITEMS
+  
+  def create_news_item
+    news_type_id = params[:newsTypeId]
+    subscription_id = params[:subscriptionId]
+    title = params[:title]
+    description = params[:description]
+    start_date = params[:startDate]
+    end_date = params[:endDate]
+    active = params[:active]
+    url = params[:url]
+    discounted_price = params[:discountedPrice]
+    regular_price = params[:regularPrice]
+
+    news_item = NewsItem.create(
+      news_type_id: news_type_id,
+      subscription_id: subscription_id,
+      title: title,
+      description: description,
+      start_date: start_date,
+      end_date: end_date,
+      active: active,
+      url: url,
+      discounted_price: discounted_price,
+      regular_price: regular_price
+    )
+  end
+
+  def update_news_item
+    news_item_id = params[:newsItemId]
+    title = params[:title]
+    description = params[:description]
+    start_date = params[:startDate]
+    end_date = params[:endDate]
+    active = params[:active]
+    url = params[:url]
+    discounted_price = params[:discountedPrice]
+    regular_price = params[:regularPrice]
+
+    NewsItem.find(news_item_id).update(
+      title: title,
+      description: description,
+      start_date: start_date,
+      end_date: end_date,
+      active: active,
+      url: url,
+      discounted_price: discounted_price,
+      regular_price: regular_price
+    )
+  end
+
+  def remove_news_item
+    NewsItem.find(params[:newsItemId]).destroy
+  end
+
+  def toggle_news_item
+    ni = NewsItem.find(params[:newsItemId])
+    ni.update(active: !params[:oldValue])
+  end
+
+
   def call_reminders
     user = current_resource_owner
     respond_to do |format| 
