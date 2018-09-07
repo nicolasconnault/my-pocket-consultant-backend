@@ -242,7 +242,7 @@ class Api::CustomerController < Api::ApplicationController
 
   def remove_notification
     if params[:notificationId]
-    user = current_resource_owner
+      user = current_resource_owner
       Notification.find(params[:notificationId]).update_attribute(:date_read, Date.today)
     end
     respond_to do |format| 

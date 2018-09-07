@@ -103,6 +103,7 @@ class Api::ConsultantController < Api::ApplicationController
                   notes: su.subscription_user_notes.map {|n|
                     {
                       id: n.id,
+                      title: n.title,
                       note: n.note,
                       createdAt: n.created_at
                     }
@@ -138,6 +139,34 @@ class Api::ConsultantController < Api::ApplicationController
       cr = SubscriptionUserCallReminder.create(subscription_user: su, title: title, call_date: call_date)
     else 
     end
+    # TODO Send back a success/error message
+  end
+
+  def create_customer_note
+    user = current_resource_owner 
+    subscription_id = params[:subscriptionId]
+    customer_id = params[:customerId]
+    title = params[:title]
+    note = params[:note]
+
+    su = SubscriptionUser.where(subscription_id: subscription_id, user_id: customer_id).first
+    if (su) 
+      cr = SubscriptionUserNote.create(subscription_user: su, title: title, note: note)
+    else 
+    end
+    # TODO Send back a success/error message
+  end
+
+  def update_customer_note
+    note_id = params[:customerNoteId]
+    title = params[:title]
+    note = params[:note]
+    SubscriptionUserNote.find(note_id).update(title: title, note: note)
+    # TODO Send back a success/error message
+  end
+
+  def remove_customer_note
+    SubscriptionUserNote.find(params[:customerNoteId]).destroy
     # TODO Send back a success/error message
   end
 

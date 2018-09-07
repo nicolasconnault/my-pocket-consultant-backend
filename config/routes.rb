@@ -75,6 +75,9 @@ Rails.application.routes.draw do
         post '/category_companies' => 'consultant#category_companies', as: :category_companies
         post '/call_reminders' => 'consultant#call_reminders', as: :call_reminders
         put '/create_call_reminder' => 'consultant#create_call_reminder', as: :create_call_reminder
+        put '/create_customer_note' => 'consultant#create_customer_note', as: :create_customer_note
+        put '/update_customer_note' => 'consultant#update_customer_note', as: :update_customer_note
+        delete '/remove_customer_note' => 'consultant#remove_customer_note', as: :remove_customer_note
       end
     end
   end
