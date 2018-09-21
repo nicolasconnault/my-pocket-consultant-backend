@@ -23,8 +23,7 @@ class User < ApplicationRecord
   has_many :subscription_user_news_types, through: :subscription_users
   has_many :news_types, through: :subscription_user_news_types
   has_one :address
-  has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: ":placeholder"
-  validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
+  has_one_attached :avatar
 
   def notifications_by_company
     notifications.where('date_read IS NULL').order(created_at: :desc).first(20).map { |n| {

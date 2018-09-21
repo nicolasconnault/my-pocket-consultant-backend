@@ -39,7 +39,5 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
-  # config.fog_provider = 'fog/aws'
-  # config.fog_credentials = {default: { aws_access_key_id: ENV['AWS_ACCESS_KEY_ID'], aws_secret_key_access: ENV['AWS_SECRET_ACCESS_KEY']}}
-
+  config.active_storage.service = :amazon
 end

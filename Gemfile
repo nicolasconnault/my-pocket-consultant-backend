@@ -9,7 +9,8 @@ git_source(:github) do |repo_name|
 end
 
 gem 'amoeba'
-gem 'aws-sdk'
+gem 'aws-sdk', '~> 3'
+gem 'aws-sdk-s3'
 gem 'aws-sdk-rails'
 gem 'bitmask_attributes'
 gem 'bootstrap-sass',       '~>3.3.6'
@@ -52,8 +53,6 @@ gem 'lightbox2-rails'
 gem 'mandrill-api'
 gem 'momentjs-rails', '>= 2.9.0'
 gem 'carrierwave', '~> 1.0'
-gem 'carrierwave-aws'
-gem 'paperclip'
 gem 'pg'
 gem 'puma', '~> 3.0'
 gem 'record_tag_helper', '~> 1.0'

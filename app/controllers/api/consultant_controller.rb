@@ -61,7 +61,8 @@ class Api::ConsultantController < Api::ApplicationController
                 active: ni.active,
                 url: ni.url,
                 discountedPrice: ni.discountedPrice,
-                regularPrice: ni.regularPrice
+                regularPrice: ni.regularPrice,
+                imageUrl: url_for(ni.image)
               }},
 
               tutorials: s.company.company_tutorials.map {|t| {
@@ -251,5 +252,19 @@ class Api::ConsultantController < Api::ApplicationController
 
   def current_resource_owner
     User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
+  end
+
+  def upload_image
+    news_item = NewsItem.find(params[:news_item_id])
+    news_item.image.attach(params[:photo])
+
+    news_item.save!
+    respond_to do |format| 
+      format.json {
+        render json: { 
+          results: { location: url_for(news_item.image) }
+        }
+      }
+    end
   end
 end

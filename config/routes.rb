@@ -85,6 +85,7 @@ Rails.application.routes.draw do
         put '/update_news_item' => 'consultant#update_news_item', as: :update_news_item
         delete '/remove_news_item' => 'consultant#remove_news_item', as: :remove_news_item
         put '/toggle_news_item' => 'consultant#toggle_news_item', as: :toggle_news_item
+        post '/upload_image/:news_item_id' => 'consultant#upload_image', as: :upload_image
       end
     end
   end
