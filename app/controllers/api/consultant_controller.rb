@@ -62,7 +62,7 @@ class Api::ConsultantController < Api::ApplicationController
                 url: ni.url,
                 discountedPrice: ni.discountedPrice,
                 regularPrice: ni.regularPrice,
-                imageUrl: url_for(ni.image)
+                imageUrl: (ni.image.attached?) ? url_for(ni.image.variant(resize: '400x300')) : nil
               }},
 
               tutorials: s.company.company_tutorials.map {|t| {
@@ -262,7 +262,7 @@ class Api::ConsultantController < Api::ApplicationController
     respond_to do |format| 
       format.json {
         render json: { 
-          results: { location: url_for(news_item.image) }
+          results: { location: url_for(news_item.image.variant(resize: '400x300')) }
         }
       }
     end
