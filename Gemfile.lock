@@ -1031,6 +1031,7 @@ DEPENDENCIES
   momentjs-rails (>= 2.9.0)
   multi_json
   newrelic_rpm
+  nokogiri
   pg
   puma (~> 3.0)
   rack-cors

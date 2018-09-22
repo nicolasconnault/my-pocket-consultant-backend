@@ -11,8 +11,8 @@ default: &default
 
 development:
   <<: *default
-  username: <%= ENV['MPC_APP_USER_POSTGRES_USERNAME'] %>
-  password: <%= ENV['MPC_APP_USER_POSTGRES_PASSWORD'] %>
+  username: <%= Rails.application.credentials.db[:username] %>
+  password: <%= Rails.application.credentials.db[:password] %>
   database: mypocketconsultant
 
 # Warning: The database defined as "test" will be erased and
@@ -20,12 +20,12 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  username: <%= ENV['MPC_APP_USER_POSTGRES_USERNAME'] %>
-  password: <%= ENV['MPC_APP_USER_POSTGRES_PASSWORD'] %>
+  username: <%= Rails.application.credentials.db[:username] %>
+  password: <%= Rails.application.credentials.db[:password] %>
   database: mypocketconsultant
 
 production:
   <<: *default
-  username: <%= ENV['MPC_APP_USER_POSTGRES_USERNAME'] %>
-  password: <%= ENV['MPC_APP_USER_POSTGRES_PASSWORD'] %>
+  username: <%= Rails.application.credentials.db[:username] %>
+  password: <%= Rails.application.credentials.db[:password] %>
   database: mypocketconsultant
