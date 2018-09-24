@@ -149,7 +149,8 @@ class Api::CustomerController < Api::ApplicationController
           url: n.url,
           id: n.id,
           regularPrice: n.regularPrice,
-          discountedPrice: n.discountedPrice
+          discountedPrice: n.discountedPrice,
+          imageUrl: (n.image.attached?) ? url_for(n.image.variant(resize: '400x300')) : nil
         } } }
       }
     end
