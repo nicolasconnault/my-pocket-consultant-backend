@@ -184,7 +184,6 @@ class Api::ConsultantController < Api::ApplicationController
     url = params[:url]
     discounted_price = params[:discountedPrice]
     regular_price = params[:regularPrice]
-
     news_item = NewsItem.create(
       news_type_id: news_type_id,
       subscription_id: subscription_id,
@@ -194,9 +193,21 @@ class Api::ConsultantController < Api::ApplicationController
       end_date: end_date,
       active: active,
       url: url,
-      discounted_price: discounted_price,
-      regular_price: regular_price
+      discountedPrice: discounted_price,
+      regularPrice: regular_price
     )
+
+    subscription = Subscription.find(params[:subscriptionId])
+    news_item.image.attach(subscription.news_item_temp_image.blob)
+    subscription.news_item_temp_image = nil
+    subscription.save!
+    respond_to do |format| 
+      format.json {
+        render json: { 
+          results: news_item.to_json
+        }
+      }
+    end
   end
 
   def update_news_item
@@ -217,8 +228,8 @@ class Api::ConsultantController < Api::ApplicationController
       end_date: end_date,
       active: active,
       url: url,
-      discounted_price: discounted_price,
-      regular_price: regular_price
+      discountedPrice: discounted_price,
+      regularPrice: regular_price
     )
   end
 
@@ -252,6 +263,23 @@ class Api::ConsultantController < Api::ApplicationController
 
   def current_resource_owner
     User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
+  end
+
+  def upload_image_for_new_news_item
+    subscription = Subscription.find(params[:subscription_id])
+    if subscription.news_item_temp_image.attached?
+      subscription.news_item_temp_image.purge
+    end
+    subscription.news_item_temp_image.attach(params[:photo])
+
+    subscription.save!
+    respond_to do |format| 
+      format.json {
+        render json: { 
+          results: { location: url_for(subscription.news_item_temp_image.variant(resize: '400x300')) }
+        }
+      }
+    end
   end
 
   def upload_image

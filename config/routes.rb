@@ -86,6 +86,7 @@ Rails.application.routes.draw do
         delete '/remove_news_item' => 'consultant#remove_news_item', as: :remove_news_item
         put '/toggle_news_item' => 'consultant#toggle_news_item', as: :toggle_news_item
         post '/upload_image/:news_item_id' => 'consultant#upload_image', as: :upload_image
+        post '/upload_image_for_new_news_item/:subscription_id' => 'consultant#upload_image_for_new_news_item', as: :upload_image_for_new_news_item 
       end
     end
   end
