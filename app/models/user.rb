@@ -59,12 +59,6 @@ class User < ApplicationRecord
     news_items
   end
 
-  def remove_subscription_news_type company_id, news_type_id
-    if subscription = self.subscriptions.where(user_id: self.id, company_id: company_id).first
-      users_company.users_company_news_types.where(news_type_id: params[:newsTypeId]).first.destroy
-    end
-  end
-
   def news_types_by_company
     sql = '
       SELECT 
@@ -135,6 +129,7 @@ class User < ApplicationRecord
           result[:phone] = consultant.phone
           result[:consultantId] = consultant.id
           if subscription
+            result[:subscriptionId] = subscription.id
             result[:websiteUrl] = subscription.website_url
             result[:facebookUrl] = subscription.facebook_url
             result[:twitterUrl] = subscription.twitter_url

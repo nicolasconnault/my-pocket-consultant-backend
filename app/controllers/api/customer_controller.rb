@@ -62,7 +62,8 @@ class Api::CustomerController < Api::ApplicationController
       first_name: params[:firstName],
       last_name: params[:lastName],
       email: params[:username],
-      password: params[:password]
+      password: params[:password],
+      phone: params[:phone]
     )
 
     if user.address.nil?
@@ -226,16 +227,21 @@ class Api::CustomerController < Api::ApplicationController
     end
   end
 
-  # Currently broken: Instead of sending the company_id, which isn't enough info, we need to send the subscription ID
   def toggle_subscription_user_news_type
     user = current_resource_owner
+    subscription_user = SubscriptionUser.where(subscription_id: params[:subscriptionId], user_id: user.id).first
+    subscription_user_news_type = subscription_user.subscription_user_news_types.where(news_type_id: params[:newsTypeId]).first
+
     if params[:oldValue] == true
-      user.remove_subscription_news_type(params[:companyId], params[:newsTypeId])
+      subscription_user_news_type.destroy
     else
-      user.add_subscription_news_type(params[:companyId], params[:newsTypeId])
-      if users_company = UsersCompany.where(user_id: user.id, company_id: params[:companyId]).first 
-        users_company.users_company_news_types.push UsersCompanyNewsType.create(news_type_id: params[:newsTypeId])
+      record_params = { news_type_id: params[:newsTypeId], subscription_user: subscription_user }
+      if SubscriptionUserNewsType.where(record_params).size > 0 # Delete any duplicates
+        SubscriptionUserNewsType.where(record_params).each do |sunt|
+          sunt.destroy
+        end
       end
+      subscription_user_news_type = SubscriptionUserNewsType.create(record_params)
     end
 
     respond_to do |format| 
