@@ -52,6 +52,7 @@ Rails.application.routes.draw do
         post '/news_types' => 'customer#news_types', as: :news_types
         post '/notifications' => 'customer#notifications', as: :user_notifications
         post '/register' => 'customer#register', as: :register
+        post '/save_push_token' => 'customer#save_push_token', as: :save_push_token
         post '/user' => 'customer#user_details', as: :user_details
         post '/consultants' => 'customer#consultants', as: :consultants
         post '/customer_companies' => 'customer#customer_companies', as: :customer_companies

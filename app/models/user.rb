@@ -23,7 +23,29 @@ class User < ApplicationRecord
   has_many :subscription_user_news_types, through: :subscription_users
   has_many :news_types, through: :subscription_user_news_types
   has_one :address
+  has_many :user_push_notification_devices, dependent: :destroy
+  has_many :push_notification_devices, through: :user_push_notification_devices
+
   has_one_attached :avatar
+
+  # To add device info(type and token)
+  #
+  # @param attributes [Hash] device informations
+  def add_device_info(attributes)
+    return unless attributes.present? && attributes[:device_type].present? && attributes[:device_token].present?
+
+    device_attr = attributes.slice(:device_type, :device_token)
+    device_params = {
+      device_type: PushNotificationDevice.device_types[device_attr[:device_type]],
+      device_token: device_attr[:device_token]
+    }
+
+    device = PushNotificationDevice.where(device_params).first_or_initialize
+
+    devices = push_notification_devices
+    return if devices.include?(device)
+    self.push_notification_devices << device
+  end
 
   def notifications_by_company
     notifications.where('date_read IS NULL').order(created_at: :desc).first(20).map { |n| {
