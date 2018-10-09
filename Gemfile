@@ -59,7 +59,7 @@ gem 'pg'
 gem 'puma', '~> 3.0'
 gem 'record_tag_helper', '~> 1.0'
 gem 'rack-cors', :require => 'rack/cors'
-gem 'rpush'
+gem 'exponent-server-sdk'
 gem 'redis'
 gem 'rolify'
 gem 'sdoc', '~> 0.4.0', group: :doc

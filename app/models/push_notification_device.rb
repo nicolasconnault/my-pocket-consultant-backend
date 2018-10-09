@@ -1,38 +1,30 @@
 class PushNotificationDevice < ApplicationRecord
-  has_many :user_push_notification_devices
-  has_many :users, through: :user_push_notification_devices
-
+  has_many :user_devices
+  has_many :users, through: :user_devices
+  
   enum device_type: { android: 0, ios: 1 }
 
-  validates :device_type, :device_token, presence: true
+  validates :device_type, :push_token, presence: true
 
   class << self
-    # [push_notification description]
     # @param devices [Array] Array of devices
     # @param data [Hash] Data to be passes with the notification
-    def push_notification(devices, data)
-      ios_device_tokens = get_device_tokens(devices, :ios)
-      android_device_tokens = get_device_tokens(devices, :android)
+    def push_notification(devices, message)
+      client = Exponent::Push::Client.new
 
-      if android_device_tokens.present?
-        options = { registration_ids: android_device_tokens, data: data }
-        PushNotify.push(:android, PushNotify::APP_NAME[:android], options)
+      messages = devices.map {|d| { to: d.push_token, sound: message[:sound], body: message[:body], badge: message[:badge] } }
+      begin
+        client.publish messages
+      rescue Exponent::Push::DeviceNotRegisteredError => e
+        matches = e.message.match '"(.*)" is not a registered'
+        if matches[1]
+          device = PushNotificationDevice.find_by_push_token(matches[1])
+          if !device.nil?
+            UserDevice.where(push_notification_device_id: device.id).each { |ud| ud.destroy }
+            device.destroy!
+          end
+        end 
       end
-
-      ios_device_tokens.each do |token|
-        options = { device_token: token, data: data, alert: data[:message] }
-        PushNotify.push(:ios, PushNotify::APP_NAME[:ios], options)
-      end
-    end
-
-    # Fetch device tokens from device records of the matching device_type
-    # @param devices [Array] Array of devices
-    # @param device_type [Symbol] type of device
-    #
-    # @return [Array] Array of device tokens
-    def get_device_tokens(devices, device_type)
-      devices.select { |d| d.device_type.to_sym.eql?(device_type) }
-        .map(&:device_token).uniq
     end
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_08_054524) do
+ActiveRecord::Schema.define(version: 2018_10_09_014724) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -167,45 +167,10 @@ ActiveRecord::Schema.define(version: 2018_10_08_054524) do
   end
 
   create_table "push_notification_devices", force: :cascade do |t|
-    t.integer "device_type"
-    t.string "device_token"
+    t.string "device_type"
+    t.string "push_token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["device_type"], name: "index_push_notification_devices_on_device_type"
-  end
-
-  create_table "rails_push_notifications_apns_apps", id: :serial, force: :cascade do |t|
-    t.text "apns_dev_cert"
-    t.text "apns_prod_cert"
-    t.boolean "sandbox_mode"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "rails_push_notifications_gcm_apps", id: :serial, force: :cascade do |t|
-    t.string "gcm_key"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "rails_push_notifications_mpns_apps", id: :serial, force: :cascade do |t|
-    t.text "cert"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "rails_push_notifications_notifications", id: :serial, force: :cascade do |t|
-    t.text "destinations"
-    t.integer "app_id"
-    t.string "app_type"
-    t.text "data"
-    t.text "results"
-    t.integer "success"
-    t.integer "failed"
-    t.boolean "sent", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["app_id", "app_type", "sent"], name: "app_and_sent_index_on_rails_push_notifications"
   end
 
   create_table "role_notification_types", id: :serial, force: :cascade do |t|
@@ -228,71 +193,6 @@ ActiveRecord::Schema.define(version: 2018_10_08_054524) do
     t.string "label"
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
     t.index ["name"], name: "index_roles_on_name"
-  end
-
-  create_table "rpush_apps", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "environment"
-    t.text "certificate"
-    t.string "password"
-    t.integer "connections", default: 1, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "type", null: false
-    t.string "auth_key"
-    t.string "client_id"
-    t.string "client_secret"
-    t.string "access_token"
-    t.datetime "access_token_expiration"
-    t.string "apn_key"
-    t.string "apn_key_id"
-    t.string "team_id"
-    t.string "bundle_id"
-  end
-
-  create_table "rpush_feedback", force: :cascade do |t|
-    t.string "device_token", limit: 64, null: false
-    t.datetime "failed_at", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "app_id"
-    t.index ["device_token"], name: "index_rpush_feedback_on_device_token"
-  end
-
-  create_table "rpush_notifications", force: :cascade do |t|
-    t.integer "badge"
-    t.string "device_token", limit: 64
-    t.string "sound"
-    t.text "alert"
-    t.text "data"
-    t.integer "expiry", default: 86400
-    t.boolean "delivered", default: false, null: false
-    t.datetime "delivered_at"
-    t.boolean "failed", default: false, null: false
-    t.datetime "failed_at"
-    t.integer "error_code"
-    t.text "error_description"
-    t.datetime "deliver_after"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "alert_is_json", default: false, null: false
-    t.string "type", null: false
-    t.string "collapse_key"
-    t.boolean "delay_while_idle", default: false, null: false
-    t.text "registration_ids"
-    t.integer "app_id", null: false
-    t.integer "retries", default: 0
-    t.string "uri"
-    t.datetime "fail_after"
-    t.boolean "processing", default: false, null: false
-    t.integer "priority"
-    t.text "url_args"
-    t.string "category"
-    t.boolean "content_available", default: false, null: false
-    t.text "notification"
-    t.boolean "mutable_content", default: false, null: false
-    t.string "external_device_id"
-    t.index ["delivered", "failed", "processing", "deliver_after", "created_at"], name: "index_rpush_notifications_multi", where: "((NOT delivered) AND (NOT failed))"
   end
 
   create_table "settings", id: :serial, force: :cascade do |t|
@@ -372,6 +272,15 @@ ActiveRecord::Schema.define(version: 2018_10_08_054524) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["company_tutorial_id"], name: "index_tutorial_steps_on_company_tutorial_id"
+  end
+
+  create_table "user_devices", force: :cascade do |t|
+    t.bigint "push_notification_device_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["push_notification_device_id"], name: "index_user_devices_on_push_notification_device_id"
+    t.index ["user_id"], name: "index_user_devices_on_user_id"
   end
 
   create_table "user_push_notification_devices", force: :cascade do |t|
@@ -496,6 +405,8 @@ ActiveRecord::Schema.define(version: 2018_10_08_054524) do
   add_foreign_key "subscriptions", "users"
   add_foreign_key "tutorial_categories", "company_categories"
   add_foreign_key "tutorial_steps", "company_tutorials"
+  add_foreign_key "user_devices", "push_notification_devices"
+  add_foreign_key "user_devices", "users"
   add_foreign_key "users_companies", "companies"
   add_foreign_key "users_companies", "users"
   add_foreign_key "users_company_news_types", "news_types"

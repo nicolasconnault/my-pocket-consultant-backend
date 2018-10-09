@@ -22,9 +22,10 @@ class User < ApplicationRecord
   has_many :subscription_user_call_reminders, through: :subscription_users
   has_many :subscription_user_news_types, through: :subscription_users
   has_many :news_types, through: :subscription_user_news_types
+  has_many :user_devices, dependent: :destroy
+  has_many :push_notification_devices, through: :user_devices
+  
   has_one :address
-  has_many :user_push_notification_devices, dependent: :destroy
-  has_many :push_notification_devices, through: :user_push_notification_devices
 
   has_one_attached :avatar
 
@@ -37,7 +38,7 @@ class User < ApplicationRecord
     device_attr = attributes.slice(:device_type, :device_token)
     device_params = {
       device_type: PushNotificationDevice.device_types[device_attr[:device_type]],
-      device_token: device_attr[:device_token]
+      push_token: device_attr[:device_token]
     }
 
     device = PushNotificationDevice.where(device_params).first_or_initialize
