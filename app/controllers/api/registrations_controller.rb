@@ -1,6 +1,6 @@
 class Api::RegistrationsController < Devise::RegistrationsController
   
-  skip_before_action :doorkeeper_authorize!  
+  # skip_before_action :doorkeeper_authorize!  
 
   # POST /resource
   def create
