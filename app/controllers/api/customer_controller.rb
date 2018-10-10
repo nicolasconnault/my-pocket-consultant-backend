@@ -52,11 +52,6 @@ class Api::CustomerController < Api::ApplicationController
     render json: { access_token: Doorkeeper::OAuth::TokenResponse.new(access_token).body["access_token"] }
   end
 
-  def save_push_token
-    user = current_resource_owner
-    user.add_device_info({ device_type: params[:deviceType], device_token: params[:token] })
-  end
-
   def save_profile
     user = current_resource_owner
     
