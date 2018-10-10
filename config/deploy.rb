@@ -3,7 +3,7 @@ lock '3.11.0'
 
 set :application, 'mpc'
 set :repo_url, 'git@github.com:nicolasconnault/my-pocket-consultant-backend.git'
-
+require 'bundler/capistrano'
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
