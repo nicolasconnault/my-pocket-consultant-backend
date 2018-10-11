@@ -1047,6 +1047,7 @@ DEPENDENCIES
   record_tag_helper (~> 1.0)
   redis
   rolify
+  ruby_dep
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   second_level_cache
