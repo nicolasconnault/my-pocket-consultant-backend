@@ -9,28 +9,11 @@ class Dashboard::UsersController < Dashboard::ApplicationController
   def index
     @entity_name = 'User'
     @roles = Role.all.map {|role| [role.name, role.id]}
-    @group_name = (params[:owner_id] && params[:owner_type] == 'Group') ? Group.find(params[:owner_id]).name : nil
-    @store_name = (params[:owner_id] && params[:owner_type] == 'Store') ? Store.find(params[:owner_id]).name : nil
-    @device_name = (params[:owner_id] && params[:owner_type] == 'Device') ? Device.find(params[:owner_id]).name : nil
-    
-    @stores = Store.joins(address: :country).where("countries.code = 'AU'").order(:name).map {|store| [store.name, store.id]}
-    @groups = Group.joins(address: :country).where("countries.code = 'AU'").order(:name).map {|g| [g.name, g.id] }
-    @advertisers = Advertiser.all.order(:name).map {|a| [a.name, a.id] }
 
     @heading_title = @entity_name.pluralize
-    if @device_name
-      @heading_title = "#{@device_name} #{@heading_title}"
-    end
-    if @store_name
-      @heading_title = "#{@store_name} #{@heading_title}"
-    end
-    if @group_name
-      @heading_title = "#{@group_name} #{@heading_title}"
-    end
-
     respond_to do |format|
       format.html { render 'dashboard/users/index' }
-      format.json { render json: UserDatatable.new(view_context, {user: current_user, owner_id: params[:owner_id], owner_type: params[:owner_type]}) }
+      format.json { render json: UserDatatable.new(view_context, {user: current_user}) }
     end
   end
 
@@ -79,12 +62,6 @@ class Dashboard::UsersController < Dashboard::ApplicationController
     user_type = params[:user_type]
 
     @errors = {}
-    if user_type == 'kiosk' && params[:kiosk_id].nil?
-      @errors[:kiosk_id] = "You must select a Kiosk if this user is a Pharmacy Kiosk" 
-      # TODO Also set up this user with all stuff ready for Healthpoint Live
-    elsif user_type == 'config' && params[:config_id].nil?
-      @errors[:config_id] = "You must select a Pharmacy Group if this user is a Pharmacy Group" 
-    end 
 
     user = User.new(user_params)
     
@@ -101,7 +78,19 @@ class Dashboard::UsersController < Dashboard::ApplicationController
   end
   
   def user_params
-    filtered_params = params.require(:user).permit(:username, :email, :id, :wake_on_schedule, :customer_type, :avatar, :owner_type, :owner_id, {:roles => []}, :first_name, :last_name, :password)
+    filtered_params = params.require(:user).permit(
+      :id, 
+      :first_name,
+      :last_name,
+      :username, 
+      :password,
+      :email, 
+      :phone, 
+      :avatar, 
+      {:roles => []}, 
+      :first_name, 
+      :last_name, 
+    )
 
     roles = []
     filtered_params[:roles].each do |role_id|
@@ -111,26 +100,5 @@ class Dashboard::UsersController < Dashboard::ApplicationController
     end
     filtered_params[:roles] = roles
     filtered_params
-  end
-
-  def sso
-    device = Device.find params[:device_id]
-    if Digest::MD5.hexdigest(device.registration_code) == params[:registration_code_md5]
-      # Make sure this user has the store manager role
-      if device.users.blank?
-        device.users << User.create
-      end
-      user = device.users.first
-
-      if !user.has_role? 'device_manager'
-        user.roles << Role.find_by_name('device_manager')
-      end
-
-      sign_in user
-
-      redirect_to Settings.urls.dashboard
-    else
-      redirect_to Settings.urls.frontend
-    end
   end
 end

@@ -27,13 +27,55 @@ Rails.application.routes.draw do
 
       scope 'admin' do
         scope 'users' do 
-          match '/(:owner_type/:owner_id)'    => 'users#index',   as: :dashboard_users, via: [:get, :post], constraints: {owner_id: /[0-9]+/}
+          match '/'    => 'users#index',   as: :dashboard_users, via: [:get, :post], constraints: {owner_id: /[0-9]+/}
           get '/check_username_uniqueness'    => 'users#check_username_uniqueness',   as: :check_username_uniqueness
           get '/check_email_uniqueness'    => 'users#check_email_uniqueness',   as: :check_email_uniqueness
-          get '/sso/:device_id/:registration_code_md5' => 'users#sso', as: :user_sso
           post '/edit'   => 'users#edit',    as: :dashboard_users_create
           put '/edit'   => 'users#edit',    as: :dashboard_users_edit
           delete '/' => 'users#delete',  as: :dashboard_users_delete 
+        end
+        scope 'companies' do
+          get '/' => 'companies#index', as: :companies
+          post '/edit'   => 'companies#edit',    as: :companies_create
+          put '/edit'   => 'companies#edit',    as: :companies_edit
+          delete '/' => 'companies#delete',  as: :companies_delete 
+        end
+        scope 'company_categories' do
+          get '/' => 'company_categories#index', as: :company_categories
+          post '/edit'   => 'company_categories#edit',    as: :company_categories_create
+          put '/edit'   => 'company_categories#edit',    as: :company_categories_edit
+          delete '/' => 'company_categories#delete',  as: :company_categories_delete 
+        end
+        scope 'tutorials' do
+          get '/' => 'tutorials#index', as: :company_tutorials
+          post '/edit'   => 'tutorials#edit',    as: :company_tutorials_create
+          put '/edit'   => 'tutorials#edit',    as: :company_tutorials_edit
+          delete '/' => 'tutorials#delete',  as: :company_tutorials_delete 
+        end
+        scope 'tutorial_categories' do
+          get '/' => 'tutorial_categories#index', as: :tutorial_categories
+          post '/edit'   => 'tutorial_categories#edit',    as: :tutorial_categories_create
+          put '/edit'   => 'tutorial_categories#edit',    as: :tutorial_categories_edit
+          delete '/' => 'tutorial_categories#delete',  as: :tutorial_categories_delete 
+        end
+        scope 'news_types' do
+          get '/' => 'news_types#index', as: :admin_news_types
+          post '/edit'   => 'news_types#edit',    as: :news_types_create
+          put '/edit'   => 'news_types#edit',    as: :news_types_edit
+          delete '/' => 'news_types#delete',  as: :news_types_delete 
+        end
+      end
+
+      scope 'consultant' do
+        scope 'subscriptions' do
+          get '/' => 'subscriptions#index', as: :subscriptions
+          post '/edit'   => 'subscriptions#edit',    as: :subscriptions_create
+          put '/edit'   => 'subscriptions#edit',    as: :subscriptions_edit
+          delete '/' => 'subscriptions#delete',  as: :subscriptions_delete
+        end
+
+        scope 'billing' do
+          get '/' => 'billing#index', as: :billing
         end
       end
     end

@@ -34,9 +34,10 @@ class Dashboard::ApplicationController < ActionController::Base
   def load_navigation
     @navigation = []
     if user_signed_in?
-      @notifications = current_user.notifications.wanted.unread.ordered
+      # @notifications = current_user.notifications.wanted.unread.ordered
+      @notifications = []
       @navigation << { title: 'Reports', url: '/', controller: 'reports', icon: 'bar-chart', children: [
-          { title: 'Store Usage', url: reports_stores_path, icon: 'tv', action: 'stores', ability: { name: :read, object: CmsStatistic } }
+          #{ title: 'Store Usage', url: reports_stores_path, icon: 'tv', action: 'stores', ability: { name: :read, object: CmsStatistic } }
         ]
       } 
     end
