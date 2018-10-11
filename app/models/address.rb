@@ -7,7 +7,7 @@ class Address < ApplicationRecord
   after_validation :geocode, if: ->(obj){ obj.street1.present? and obj.street1_changed? } # auto-fetch coordinates
   reverse_geocoded_by :latitude, :longitude do |obj,results|
     if geo = results.first
-      obj.street1   = geo.street_address
+      obj.street1   = geo.address
       obj.suburb   = geo.city
       obj.postcode = geo.postal_code
       obj.country = Country.find_by_name(geo.country)
