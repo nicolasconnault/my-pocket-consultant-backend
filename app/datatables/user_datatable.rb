@@ -1,5 +1,5 @@
 class UserDatatable < AjaxDatatablesRails::Base
-
+  extend Forwardable
   def_delegators :@view, :link_to, :raw, :button_tag, :users_delete_path
 
   def view_columns
