@@ -77,6 +77,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
   config.active_storage.service = :amazon
+  config.require_master_key = true
 
   config.middleware.swap Rails::Rack::Logger, Silencer::Logger, :silence => [%r{.*record_impression.*}, %r{.*record_click.*}]
   Sidekiq::Logging.logger.level = Logger::WARN
