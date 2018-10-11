@@ -1,4 +1,4 @@
-class UserDatatable < AjaxDatatablesRails::Base
+class UserDatatable < ApplicationDatatable
   extend Forwardable
   def_delegators :@view, :link_to, :raw, :button_tag, :users_delete_path
 
@@ -7,9 +7,7 @@ class UserDatatable < AjaxDatatablesRails::Base
      id: { source: 'User.id', cond: :eq, searchable: true, orderable: true },
      name: { source: 'User.first_name', searchable: true, orderable: true},
      avatar: { source: 'User.id', searchable: false, orderable: false},
-     owner: { source: 'User.owner_id', cond: :like, searchable: true, orderable: true},
      roles: { source: 'User.id', searchable: false, orderable: false},
-     owner_type: { source: 'User.owner_type', cond: :like, searchable: true, orderable: true},
      actions: { source: 'User.id', searchable: false, orderable: false }
     }
   end
@@ -18,15 +16,14 @@ class UserDatatable < AjaxDatatablesRails::Base
 
   def data
     records.map do |record|
+      avatar_url = (record.avatar.attached?) ? record.avatar.variant(resize: "100x100").processed.service_url : ''
       data_object = {toggle: 'modal', target: '#edit-modal',
         select: '',
         id: record.id,
         name: record.full_name,
-        avatar_url: record.avatar.url,
-        owner_id: record.owner_id,
-        owner_type: record.owner_type,
+        avatar_url: avatar_url,
         first_name: record.first_name,
-        roles: (record.roles) ? record.roles.map {|r| r.label }.join(', ') : '',
+        roles: (record.roles) ? record.roles.map {|r| r.name.capitalize }.join(', ') : '',
         last_name: record.last_name,
         username: record.username,
       }
@@ -35,8 +32,7 @@ class UserDatatable < AjaxDatatablesRails::Base
 
       data_object_for_form[:roles] = raw(record.role_ids)
       data_object_for_form[:email] = record.email
-      data_object[:avatar] = record.avatar.url
-      data_object[:owner] = (record.owner) ? record.owner.name : ''
+      data_object[:avatar] = avatar_url
 
       actions = '<div class="btn-group" role="group" aria-label="Actions">'
       actions += button_tag(class: 'btn btn-primary', data: data_object_for_form, title: 'Edit this user') {|button| raw(' <i class="fa fa-pencil"></i>')} if options[:user].can?(:update, User, {id: record.id})
@@ -44,7 +40,7 @@ class UserDatatable < AjaxDatatablesRails::Base
       actions += button_tag(class: 'btn btn-danger delete-user', data: {id: record.id}, title: 'Delete this user') {|button| ' <i class="fa fa-trash-o"></i>'.html_safe} if options[:user].can?(:delete, User, {id: record.id})
       actions += '</div>'
 
-      data_object[:avatar] = raw('<img class="datatable-image" src="' + record.avatar.url + '" />')
+      data_object[:avatar] = raw('<img class="datatable-image" src="' + avatar_url + '" />')
       data_object[:actions] = raw(actions)
       data_object['DT_RowId'] = "record_#{record.id}"
       data_object
@@ -52,11 +48,7 @@ class UserDatatable < AjaxDatatablesRails::Base
   end
 
   def get_raw_records
-    if options[:owner_id]
-      User.where(owner_id: options[:owner_id], owner_type: options[:owner_type])
-    else
-      User.all
-    end
+    User.all
   end
 
   # ==== Insert 'presenter'-like methods below if necessary

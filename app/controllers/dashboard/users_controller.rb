@@ -13,7 +13,7 @@ class Dashboard::UsersController < Dashboard::ApplicationController
     @heading_title = @entity_name.pluralize
     respond_to do |format|
       format.html { render 'dashboard/users/index' }
-      format.json { render json: UserDatatable.new(view_context, {user: current_user}) }
+      format.json { render json: UserDatatable.new(params, view_context: view_context, user: current_user ) }
     end
   end
 

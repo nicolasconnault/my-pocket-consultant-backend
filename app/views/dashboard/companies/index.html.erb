@@ -1,0 +1,4 @@
+<%= page_heading title: @heading_title, breadcrumbs: [['Home', dashboard_root_path] ,['Administration', nil], [@heading_title, nil]] %>
+<%= panel title: "#{@entity_name}s List", contents: render('dashboard/companies/list'), right_button: {'data-target': '#edit-modal', 'data-toggle': 'modal', title: "<i class=\"fa fa-plus\"></i> New #{@entity_name}"} %>
+<%= render('dashboard/companies/edit_modal') %>
+<%= render('dashboard/companies/button_events') %>

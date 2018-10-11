@@ -35,31 +35,31 @@ Rails.application.routes.draw do
           delete '/' => 'users#delete',  as: :dashboard_users_delete 
         end
         scope 'companies' do
-          get '/' => 'companies#index', as: :companies
+          match '/' => 'companies#index', as: :companies, via: [:get, :post]
           post '/edit'   => 'companies#edit',    as: :companies_create
           put '/edit'   => 'companies#edit',    as: :companies_edit
           delete '/' => 'companies#delete',  as: :companies_delete 
         end
         scope 'company_categories' do
-          get '/' => 'company_categories#index', as: :company_categories
+          match '/' => 'company_categories#index', as: :company_categories, via: [:get, :post]
           post '/edit'   => 'company_categories#edit',    as: :company_categories_create
           put '/edit'   => 'company_categories#edit',    as: :company_categories_edit
           delete '/' => 'company_categories#delete',  as: :company_categories_delete 
         end
         scope 'tutorials' do
-          get '/' => 'tutorials#index', as: :company_tutorials
+          match '/' => 'tutorials#index', as: :company_tutorials, via: [:get, :post]
           post '/edit'   => 'tutorials#edit',    as: :company_tutorials_create
           put '/edit'   => 'tutorials#edit',    as: :company_tutorials_edit
           delete '/' => 'tutorials#delete',  as: :company_tutorials_delete 
         end
         scope 'tutorial_categories' do
-          get '/' => 'tutorial_categories#index', as: :tutorial_categories
+          match '/' => 'tutorial_categories#index', as: :tutorial_categories, via: [:get, :post]
           post '/edit'   => 'tutorial_categories#edit',    as: :tutorial_categories_create
           put '/edit'   => 'tutorial_categories#edit',    as: :tutorial_categories_edit
           delete '/' => 'tutorial_categories#delete',  as: :tutorial_categories_delete 
         end
         scope 'news_types' do
-          get '/' => 'news_types#index', as: :admin_news_types
+          match '/' => 'news_types#index', as: :admin_news_types, via: [:get, :post]
           post '/edit'   => 'news_types#edit',    as: :news_types_create
           put '/edit'   => 'news_types#edit',    as: :news_types_edit
           delete '/' => 'news_types#delete',  as: :news_types_delete 
@@ -68,7 +68,7 @@ Rails.application.routes.draw do
 
       scope 'consultant' do
         scope 'subscriptions' do
-          get '/' => 'subscriptions#index', as: :subscriptions
+          match '/' => 'subscriptions#index', as: :subscriptions, via: [:get, :post]
           post '/edit'   => 'subscriptions#edit',    as: :subscriptions_create
           put '/edit'   => 'subscriptions#edit',    as: :subscriptions_edit
           delete '/' => 'subscriptions#delete',  as: :subscriptions_delete
