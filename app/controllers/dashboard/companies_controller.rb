@@ -10,6 +10,8 @@ class Dashboard::CompaniesController < Dashboard::ApplicationController
     @entity_name = 'Company'
 
     @categories = CompanyCategory.all.map {|cc| [cc.name, cc.id]}
+    @news_types = NewsType.all.map {|nt| [nt.label, nt.id]}
+
     @heading_title = @entity_name.pluralize
     respond_to do |format|
       format.html { render 'dashboard/companies/index' }
@@ -65,8 +67,16 @@ class Dashboard::CompaniesController < Dashboard::ApplicationController
       :name,
       :label,
       :company_category_id,
+      {:news_types => []},
       :logo
     )
+    news_types = []
+    filtered_params[:news_types].each do |news_type_id|
+      if !news_type_id.nil? && news_type_id != '' && NewsType.find(news_type_id)
+        news_types << NewsType.find(news_type_id)
+      end
+    end
+    filtered_params[:news_types] = news_types
     filtered_params[:name] = filtered_params[:label].parameterize
     filtered_params
   end

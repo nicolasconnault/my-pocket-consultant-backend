@@ -20,6 +20,7 @@
           <div class="modal-body">
             <%= f.input 'label', label: 'Name' %>
             <%= f.input 'company_category_id', label: 'Category', collection: @categories, required: false, input_html: {class: 'form-control chosen-select', multiple: false} %>
+            <%= f.input 'news_types', label: 'News Types', collection: @news_types, required: false, input_html: {class: 'form-control chosen-select', multiple: true} %>
             <%= f.input 'logo', label: 'Logo', as: :file, required: false, input_html: {}, direct_upload: true %>
             <img src="" id="company-logo" />
           </div>
@@ -49,6 +50,7 @@
         }
 
         var category_name = (undefined === button.attr('data-category') || button.attr('data-category').length == 0) ? null : button.attr('data-category'); 
+        var news_type_ids = (undefined === button.attr('data-news_types') || button.attr('data-news_types').length == 0) ? null : JSON.parse(button.attr('data-news_types')); 
 
         if (id) {
           $.each($(button).data(), function(name, value) {
@@ -70,6 +72,12 @@
               $(option).prop('selected', true);
               $(option).trigger('chosen:updated');
             }
+          });
+          $.each(news_type_ids, function(key, item) {
+            $('[name="company[news_types][]"] option[value="' + item + '"]').each(function(key, option) {
+              $(option).prop('selected', true);
+              $(option).trigger('chosen:updated');
+            });
           });
         } else {
           $('#company-logo').attr('src', ''); 

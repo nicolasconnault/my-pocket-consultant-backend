@@ -22,10 +22,12 @@ class CompanyDatatable < ApplicationDatatable
         id: record.id,
         label: record.label,
         logo_url: logo_url,
+        news_types: (record.news_types) ? record.news_types.map {|nt| nt.label }.join(', ') : '',
         category: record.company_category.name,
       }
 
       data_object_for_form = data_object.dup
+      data_object_for_form[:news_types] = raw(record.news_type_ids)
 
       data_object[:logo] = logo_url
 

@@ -6,6 +6,9 @@ class Company < ApplicationRecord
   has_many :subscriptions
   has_many :subscribed_users, class_name: "User", source: :user, through: :subscriptions, foreign_key: :user_id
   has_many :company_tutorials
+  has_many :company_news_types
+  has_many :news_types, through: :company_news_types
+
   has_one_attached :logo
 
   def company_category_name
@@ -13,5 +16,11 @@ class Company < ApplicationRecord
   end
   def company_category_label
     company_category.label
+  end
+  def news_type_ids
+    if !self.news_types.blank?
+      return self.news_types.map {|nt| nt.id}
+    end
+    []
   end
 end

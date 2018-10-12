@@ -17,10 +17,5 @@
         }); 
       }
     });
-    $('body').on('click', 'button.store-users', function(e) {
-      e.preventDefault(); 
-      var button = $(this);
-      window.location = Routes.users_path('Store', button.attr('data-id')); 
-    });
   });
 </script>
