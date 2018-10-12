@@ -1,0 +1,65 @@
+  <div id="edit-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="edit-modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <%= simple_form_for :company_category, url: company_categories_edit_path, html: {
+            class: 'form', 
+              id: 'edit-form',
+              'data-fv-framework': "bootstrap",
+              'data-fv-icon-valid': "fa fa-check",
+              'data-fv-icon-invalid': "fa fa-times",
+              'data-fv-icon-validating': "fa fa-refresh",
+              'data-fv-live': "enabled",
+              'data-fv-excluded': ':disabled',
+              multipart: true
+        } do |f| %>
+          <%= f.input 'id', as: :hidden, input_html: {value: '', class: 'id'} %>
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cancel"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">New <%= @entity_name %></h4>
+          </div>
+          <div class="modal-body">
+            <%= f.input 'label', label: 'Name' %>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <%= f.button :submit, label: "Save changes" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function() {
+
+      $('#edit-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+
+        var modal = $(this);
+        
+        var id = button.attr('data-id'); 
+
+        if (id) {
+          modal.find('.modal-title').text('Edit <%= @entity_name %>');
+        } else {
+          modal.find('.modal-title').text('New <%= @entity_name %>');
+          reset_form_fields(this);
+        }
+
+        if (id) {
+          $.each($(button).data(), function(name, value) {
+            var real_name = humps.decamelize(name); // jQuery automatically camelizes data-* variables, which were original activerecord fields, so we reverse that here
+            modal.find('#company_category_'+real_name).val('');
+            
+            modal.find('#company_category_'+real_name).val(value);
+            if (modal.find('#company_category_'+real_name).data('disabled_if_editing')) {
+              modal.find('#company_category_'+real_name).prop('disabled', true);
+            } 
+          });
+        } else {
+
+        }
+        
+        $('.chosen-select').trigger('chosen:updated');
+      });
+    }); 
+  </script>

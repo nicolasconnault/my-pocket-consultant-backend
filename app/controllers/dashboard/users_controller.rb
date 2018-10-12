@@ -5,9 +5,12 @@ class Dashboard::UsersController < Dashboard::ApplicationController
   protect_from_forgery with: :exception
   before_action :authenticate_user!, except: [:sso]
   load_and_authorize_resource except: [:sso]
+  
+  @@model = User
+  @@entity_name = 'User'
 
   def index
-    @entity_name = 'User'
+    @entity_name = @@entity_name
     @roles = Role.all.map {|role| [role.name, role.id]}
 
     @heading_title = @entity_name.pluralize
@@ -26,7 +29,7 @@ class Dashboard::UsersController < Dashboard::ApplicationController
   end
 
   def edit
-    @entity_name = 'User'
+    @entity_name = @@entity_name
 
     params = user_params
     
@@ -55,7 +58,7 @@ class Dashboard::UsersController < Dashboard::ApplicationController
       end
     end 
 
-    redirect_to dashboard_users_url
+    redirect_to users_url
   end
 
   def create

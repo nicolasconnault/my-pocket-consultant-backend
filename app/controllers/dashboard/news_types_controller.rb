@@ -5,9 +5,12 @@ class Dashboard::NewsTypesController < Dashboard::ApplicationController
   protect_from_forgery with: :exception
   before_action :authenticate_user!
   load_and_authorize_resource
+  
+  @@model = NewsType
+  @@entity_name = 'News Type'
 
   def index
-    @entity_name = 'News Type'
+    @entity_name = @@entity_name
 
     @heading_title = @entity_name.pluralize
     respond_to do |format|
@@ -17,7 +20,7 @@ class Dashboard::NewsTypesController < Dashboard::ApplicationController
   end
 
   def edit
-    @entity_name = 'News Type'
+    @entity_name = @@entity_name
 
     params = news_type_params
 

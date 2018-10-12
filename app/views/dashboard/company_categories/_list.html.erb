@@ -1,17 +1,13 @@
-<table id="entities-table" class="table table-striped table-hover table-bordered" data-source="<%= users_path(format: :json) %>">
+<table id="entities-table" class="table table-striped table-hover table-bordered" data-source="<%= company_categories_path(format: :json) %>">
   <thead>
     <tr class="filters">
-      <th><input/></th>
-      <th><input/></th>
       <th><input/></th>
       <th><input/></th>
       <th></th>
     </tr>
     <tr>
       <th>ID</th>
-      <th>Full Name</th>
-      <th>Roles</th>
-      <th>Avatar</th>
+      <th>Name</th>
       <th class="actions">Actions</th>
     </tr>
   </thead>
@@ -32,12 +28,10 @@
       pagingType: "full_numbers",
       columns: [
         { searchable: true, orderable: true, data: 'id'},
-        { searchable: true, orderable: true, data: 'name'},
-        { searchable: false, orderable: false, data: 'roles'},
-        { searchable: false, orderable: false, data: 'avatar'},
+        { searchable: true, orderable: true, data: 'label'},
         { searchable: false, orderable: false, data: 'actions'}
       ],
-      order: [[ 2, 'asc' ]], // Entity name
+      order: [[ 2, 'asc' ]], // Entity label
       initComplete: function() {
         $('.filters input, .filters select', this).on('change', (function(_this) {
           return function(e) {

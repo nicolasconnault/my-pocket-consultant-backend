@@ -16,17 +16,17 @@ class User < ApplicationRecord
 
   include Wupee::Receiver
 
-  has_many :subscription_users
-  has_many :subscriptions
+  has_many :subscription_users, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
   has_many :subscribed_companies, class_name: "Company", source: :company, through: :subscriptions, foreign_key: :user_id
-  has_many :notifications
+  has_many :notifications, dependent: :destroy
   has_many :subscription_user_call_reminders, through: :subscription_users
   has_many :subscription_user_news_types, through: :subscription_users
   has_many :news_types, through: :subscription_user_news_types
   has_many :user_devices, dependent: :destroy
   has_many :push_notification_devices, through: :user_devices
   
-  has_one :address
+  has_one :address, dependent: :destroy
 
   has_one_attached :avatar
 

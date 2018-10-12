@@ -27,12 +27,12 @@ Rails.application.routes.draw do
 
       scope 'admin' do
         scope 'users' do 
-          match '/'    => 'users#index',   as: :dashboard_users, via: [:get, :post], constraints: {owner_id: /[0-9]+/}
+          match '/'    => 'users#index',   as: :users, via: [:get, :post], constraints: {owner_id: /[0-9]+/}
           get '/check_username_uniqueness'    => 'users#check_username_uniqueness',   as: :check_username_uniqueness
           get '/check_email_uniqueness'    => 'users#check_email_uniqueness',   as: :check_email_uniqueness
-          post '/edit'   => 'users#edit',    as: :dashboard_users_create
-          put '/edit'   => 'users#edit',    as: :dashboard_users_edit
-          delete '/' => 'users#delete',  as: :dashboard_users_delete 
+          post '/edit'   => 'users#edit',    as: :users_create
+          put '/edit'   => 'users#edit',    as: :users_edit
+          delete '/' => 'users#delete',  as: :users_delete 
         end
         scope 'companies' do
           match '/' => 'companies#index', as: :companies, via: [:get, :post]

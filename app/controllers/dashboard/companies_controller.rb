@@ -6,8 +6,10 @@ class Dashboard::CompaniesController < Dashboard::ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
 
+  @@model = Company
+  @@entity_name = 'Company'
   def index
-    @entity_name = 'Company'
+    @entity_name = @@entity_name
 
     @categories = CompanyCategory.all.map {|cc| [cc.name, cc.id]}
     @news_types = NewsType.all.map {|nt| [nt.label, nt.id]}
@@ -20,7 +22,7 @@ class Dashboard::CompaniesController < Dashboard::ApplicationController
   end
 
   def edit
-    @entity_name = 'Company'
+    @entity_name = @@entity_name
 
     params = company_params
 

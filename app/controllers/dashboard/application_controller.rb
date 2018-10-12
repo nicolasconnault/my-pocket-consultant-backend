@@ -1,3 +1,4 @@
+require "#{Rails.root}/lib/xhr"
 class Dashboard::ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -7,9 +8,32 @@ class Dashboard::ApplicationController < ActionController::Base
   before_action :setPrepare
   before_action :current_ability
   before_action :load_navigation
+  @@model = nil
+  @@entity_name = ''
 
   def current_ability
     @current_ability ||= DashboardAbility.new(current_user)
+  end
+
+  def delete
+    id = params[:id]
+    ids = params[:ids]
+
+    if id
+      entity = @@model.where(id: id)
+      if entity.empty?
+        message = Xhr.build_message "#{@@entity_name} has already been deleted.", :warning, "#{@@entity_name} already deleted"
+      else
+        entity.first.destroy
+        message = Xhr.build_message "#{@@entity_name} successfully deleted."
+      end
+    elsif ids
+      @@model.where(id: ids).each do |e|
+        e.destroy
+      end
+      message = Xhr.build_message "#{@@entity_name} successfully deleted."
+    end
+    render json: message, status: 200
   end
 
   def setPrepare

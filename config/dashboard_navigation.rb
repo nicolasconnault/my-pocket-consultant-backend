@@ -3,8 +3,8 @@
 SimpleNavigation::Configuration.run do |navigation|
   navigation.items do |primary|
 
-    primary.item :administration, 'Administration', dashboard_users_url, highlights_on: %r(/admin), if: -> { can? :manage, User } do |sub_nav|
-      sub_nav.item :administration_users,              '<i class="fa fa-users"></i> Users'.html_safe, dashboard_users_url, if: -> { can? :manage, User }, highlights_on: %r(/admin/users)
+    primary.item :administration, 'Administration', users_url, highlights_on: %r(/admin), if: -> { can? :manage, User } do |sub_nav|
+      sub_nav.item :administration_users,              '<i class="fa fa-users"></i> Users'.html_safe, users_url, if: -> { can? :manage, User }, highlights_on: %r(/admin/users)
       sub_nav.item :administration_companies,          '<i class="fa fa-building"></i> Companies'.html_safe, companies_url, if: -> { can? :manage, Company }, highlights_on: %r(/admin/companies)
       sub_nav.item :administration_company_categories, '<i class="fa fa-building"></i> Company Categories'.html_safe, company_categories_url, if: -> { can? :manage, CompanyCategory }, highlights_on: %r(/admin/company_categories)
       sub_nav.item :administration_tutorials,          '<i class="fa fa-mortar-board"></i> Tutorials'.html_safe, company_tutorials_url, if: -> { can? :manage, CompanyTutorial }, highlights_on: %r(/admin/company_tutorials)

@@ -7,7 +7,7 @@ class Company < ApplicationRecord
   has_many :subscribed_users, class_name: "User", source: :user, through: :subscriptions, foreign_key: :user_id
   has_many :company_tutorials
   has_many :company_news_types
-  has_many :news_types, through: :company_news_types
+  has_many :news_types, through: :company_news_types, dependent: :destroy
 
   has_one_attached :logo
 
