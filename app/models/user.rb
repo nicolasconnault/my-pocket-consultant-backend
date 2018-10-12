@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  include Rails.application.routes.url_helpers
   second_level_cache expires_in: 1.week
   rolify
   # Include default devise modules. Others available are:
@@ -140,7 +141,8 @@ class User < ApplicationRecord
           phone: nil,
           websiteUrl: nil,
           facebookUrl: nil,
-          twitterUrl: nil
+          twitterUrl: nil,
+          logoUrl: company.logo.attached? ? url_for(company.logo.variant(resize: '400x300').processed.service_url) : nil 
         } 
 
         if enabled && !user_companies.find{|uc| uc.company_id == company.id}.consultant.nil?

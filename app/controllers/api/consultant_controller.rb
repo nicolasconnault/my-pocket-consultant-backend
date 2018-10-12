@@ -47,6 +47,7 @@ class Api::ConsultantController < Api::ApplicationController
               websiteUrl: s.website_url,
               facebookUrl: s.facebook_url,
               twitterUrl: s.twitter_url,
+              logoUrl: (s.company.logo.attached? && !s.company.logo.blob.nil?) ? url_for(s.company.logo.variant(resize: '400x300').processed.service_url) : nil, 
               newsItems: s.news_items.map {|ni| {
                 id: ni.id,
                 newsType: {
@@ -62,7 +63,7 @@ class Api::ConsultantController < Api::ApplicationController
                 url: ni.url,
                 discountedPrice: ni.discountedPrice,
                 regularPrice: ni.regularPrice,
-                imageUrl: (ni.image.attached?) ? url_for(ni.image.variant(resize: '400x300')) : nil
+                imageUrl: (ni.image.attached? && !ni.image.blob.nil?) ? url_for(ni.image.variant(resize: '400x300').processed.service_url) : nil
               }},
 
               tutorials: s.company.company_tutorials.map {|t| {
@@ -276,7 +277,7 @@ class Api::ConsultantController < Api::ApplicationController
     respond_to do |format| 
       format.json {
         render json: { 
-          results: { location: url_for(subscription.news_item_temp_image.variant(resize: '400x300')) }
+          results: { location: url_for(subscription.news_item_temp_image.variant(resize: '400x300').processed.service_url) }
         }
       }
     end
@@ -290,7 +291,7 @@ class Api::ConsultantController < Api::ApplicationController
     respond_to do |format| 
       format.json {
         render json: { 
-          results: { location: url_for(news_item.image.variant(resize: '400x300')) }
+          results: { location: url_for(news_item.image.variant(resize: '400x300').processed.service_url) }
         }
       }
     end

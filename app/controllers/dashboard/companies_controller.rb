@@ -64,6 +64,7 @@ class Dashboard::CompaniesController < Dashboard::ApplicationController
       :id, 
       :label,
       :company_category_id,
+      :logo
     )
   end
 end

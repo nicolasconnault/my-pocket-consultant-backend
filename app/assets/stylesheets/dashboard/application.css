@@ -12,7 +12,7 @@
  *
  *= require lightbox
  *= require fullcalendar
- *= require animate/animate.css
+ *= require animate
  *= require jquery.minicolors
  *= require jquery-ui
  *= require jquery-ui/autocomplete
@@ -23,6 +23,7 @@
  *= require dashboard/jquery.dataTables.yadcf
  *= require dashboard/formValidation.min 
  *= require switchery
+ *= require metismenu
  *= require dashboard/style
  *= require font-awesome
  *= require chosen
