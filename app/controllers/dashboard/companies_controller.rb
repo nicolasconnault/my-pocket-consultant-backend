@@ -62,9 +62,12 @@ class Dashboard::CompaniesController < Dashboard::ApplicationController
   def company_params
     filtered_params = params.require(:company).permit(
       :id, 
+      :name,
       :label,
       :company_category_id,
       :logo
     )
+    filtered_params[:name] = filtered_params[:label].parameterize
+    filtered_params
   end
 end

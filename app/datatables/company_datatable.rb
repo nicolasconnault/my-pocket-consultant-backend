@@ -6,7 +6,7 @@ class CompanyDatatable < ApplicationDatatable
     @view_columns ||= {
      id: { source: 'Company.id', cond: :eq, searchable: true, orderable: true },
      label: { source: 'Company.label', searchable: true, orderable: true},
-     category: { source: 'Company.company_category_id', searchable: true, orderable: true},
+     category: { source: 'CompanyCategory.name', searchable: true, orderable: true},
      logo: { source: 'Company.id', searchable: false, orderable: false},
      actions: { source: 'Company.id', searchable: false, orderable: false }
     }
@@ -43,7 +43,7 @@ class CompanyDatatable < ApplicationDatatable
   end
 
   def get_raw_records
-    Company.all
+    Company.joins(:company_category).select('companies.*, company_categories.name').distinct
   end
 
   # ==== Insert 'presenter'-like methods below if necessary
