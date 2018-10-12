@@ -1,0 +1,26 @@
+<script>
+  $(function() {
+
+    $('body').on('click', 'button.delete-news_type', function(e) {
+      e.preventDefault();
+
+      if (confirm('Are you sure you want to delete this <%= @entity_name %>?')) {
+        var button = $(this);
+        $.ajax({
+          url: Routes.news_types_delete_path(), 
+          type: 'DELETE', 
+          data: {id: button.attr('data-id')}, 
+          complete: function(message) {
+            ajax_notification(message);
+            $(button).parents('tr').remove();
+          }
+        }); 
+      }
+    });
+    $('body').on('click', 'button.store-users', function(e) {
+      e.preventDefault(); 
+      var button = $(this);
+      window.location = Routes.users_path('Store', button.attr('data-id')); 
+    });
+  });
+</script>
