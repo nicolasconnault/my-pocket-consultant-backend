@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="initial-scale=1, shrink-to-fit=no, width=device-width" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>My Pocket Consultant: Subscriptions</title> 
+    <!-- Include style per-controller - vendor plugins -->
+    <%= stylesheet_link_tag params[:controller] if ::Rails.application.assets.find_asset("#{params[:controller]}.css") %>
+    <%= action_cable_meta_tag %>
+    <!-- Main css styles -->
+    <%= stylesheet_link_tag "app/application", media: 'all', type: "text/css" %>
+    
+
+    <!-- Main javascript files -->
+    <%= javascript_include_tag "app/application" %>
+    
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <% if content_for?(:head) %>
+        <%= yield(:head) %>
+    <% end %>
+
+    <%= csrf_meta_tags %>
+</head>
+  <body data-controller="<%= controller_name %>" data-action="<%= action_name %>">
+
+    <!-- Wrapper-->
+    <div id="wrapper" class="<%= params[:controller] %>.<%= params[:action] %>">
+
+        <!-- Navigation -->
+        <%= render 'layouts/app/navigation' %>
+
+        <!-- Page wraper -->
+        <div id="page-wrapper" class="gray-bg <%= @extra_class %>">
+
+            <!-- Page wrapper -->
+            <%= render 'layouts/app/topnavbar' %>
+
+            <%= yield %>
+
+            <!-- Footer -->
+            <%= render 'layouts/app/footer' %>
+
+        </div>
+        <!-- End page wrapper--> 
+      </div>
+
+    <!-- End wrapper-->
+    
+    <!-- Include javascript per-controller - vendor plugins -->
+    <%= javascript_include_tag params[:controller] if params[:controller] != 'users' && ::Rails.application.assets.find_asset("#{params[:controller]}.js") %>
+
+    <!-- Include javascript per-view -->
+    <!-- For demo purpose we include javascript in view but you can easily start SeedProject and organize it with Rails asset pipeline as you want -->
+    <%= yield :javascript %>
+
+    <!-- AJAX result popup notifications -->
+    <div class="popup-notification modal fade " id="ajax-popup-notification" tabindex="-1" role="dialog" aria-labelledby="ajax-label" style="display: none;">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header alert ">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h3 class="modal-title" id="ajax-label"><i class="fa"></i> <span class="message-heading"></span></h3>
+          </div>
+          <div class="modal-body">
+              <p class="message-body"></p>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="OK">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>

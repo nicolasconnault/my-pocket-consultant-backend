@@ -88,7 +88,7 @@ Rails.application.routes.draw do
         skip_controllers :applications, :authorized_applications
       end
 
-      root 'home#index', as: :app_root
+      root 'home#index', as: :api_root
 
       scope 'push_notification', defaults: { format: :json } do
         post '/save_push_token' => 'push_notification#save_push_token', as: :save_push_token
