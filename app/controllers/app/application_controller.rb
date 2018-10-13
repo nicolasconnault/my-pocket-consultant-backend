@@ -14,8 +14,8 @@ class App::ApplicationController < ActionController::Base
     @current_ability ||= AppAbility.new(current_user)
   end
 
-
   def load_navigation
+    byebug
     @navigation = []
     if user_signed_in?
       # @notifications = current_user.notifications.wanted.unread.ordered
