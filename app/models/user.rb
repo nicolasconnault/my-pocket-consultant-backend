@@ -16,6 +16,7 @@ class User < ApplicationRecord
 
   include Wupee::Receiver
 
+  has_many :oauth_access_tokens, foreign_key: :resource_owner_id
   has_many :subscription_users, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
   has_many :subscribed_companies, class_name: "Company", source: :company, through: :subscriptions, foreign_key: :user_id

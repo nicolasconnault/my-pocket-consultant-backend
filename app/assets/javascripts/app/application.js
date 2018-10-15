@@ -6,8 +6,10 @@
 //
 //
 //= require jquery
+//= require moment
 //= require bootstrap-sprockets
 //= require bootstrap-datetimepicker
+//= require jquery.screenfull
 //= require js-routes
 //= require gmaps/google
 //= require popper

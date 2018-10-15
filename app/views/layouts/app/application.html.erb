@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta content="initial-scale=1, shrink-to-fit=no, width=device-width" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>My Pocket Consultant: Subscriptions</title> 
     <!-- Include style per-controller - vendor plugins -->
     <%= stylesheet_link_tag params[:controller] if ::Rails.application.assets.find_asset("#{params[:controller]}.css") %>
@@ -40,6 +41,13 @@
     <!-- For demo purpose we include javascript in view but you can easily start SeedProject and organize it with Rails asset pipeline as you want -->
     <%= yield :javascript %>
 
+    <script>
+      $(function() {
+        if (screenfull.enabled) {
+            screenfull.request();
+        }
+      });
+    </script>
     <!-- AJAX result popup notifications -->
     <div class="popup-notification modal fade " id="ajax-popup-notification" tabindex="-1" role="dialog" aria-labelledby="ajax-label" style="display: none;">
       <div class="modal-dialog" role="document">

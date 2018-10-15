@@ -80,6 +80,7 @@ gem 'simple_form'
 # gem 'simple_form_fancy_uploads' # incompatible with simple_form 4
 gem 'simple-navigation'
 gem 'switchery-rails'
+gem 'jquery-screenfull-rails'
 gem 'mini_racer'
 gem 'thin'
 gem 'timezone', '~> 1.0'

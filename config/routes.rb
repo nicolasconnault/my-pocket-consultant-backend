@@ -82,13 +82,14 @@ Rails.application.routes.draw do
   end
 
   scope module: 'app' do
-    constraints DomainConstraint.new(['subs.mypocketconsultant.app', 'stagingapi.mypocketconsultant.app', 'subs.mypocketconsultant', 'subs.smbstreamline.com.au']) do
+    constraints DomainConstraint.new(['subs.mypocketconsultant.app', 'stagingapi.mypocketconsultant.app', 'subs.mypocketconsultant', 'subs.smbstreamline.com.au', '192.168.0.11']) do
       use_doorkeeper do
         # No need to register client application
         skip_controllers :applications, :authorized_applications
       end
 
       root 'subscriptions#index', as: :app_root
+      get 'subscriptions/:token' => 'subscriptions#index', as: :subscriptions_index
     end
   end
 
