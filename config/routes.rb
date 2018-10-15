@@ -141,6 +141,10 @@ Rails.application.routes.draw do
         put '/update_customer_note' => 'consultant#update_customer_note', as: :update_customer_note
         delete '/remove_customer_note' => 'consultant#remove_customer_note', as: :remove_customer_note
         
+        put '/create_subscription' => 'consultant#create_subscription', as: :create_subscription
+        put '/update_subscription' => 'consultant#update_subscription', as: :update_subscription
+        delete '/remove_subscription' => 'consultant#remove_subscription', as: :remove_subscription
+        
         put '/create_news_item' => 'consultant#create_news_item', as: :create_news_item
         put '/update_news_item' => 'consultant#update_news_item', as: :update_news_item
         delete '/remove_news_item' => 'consultant#remove_news_item', as: :remove_news_item

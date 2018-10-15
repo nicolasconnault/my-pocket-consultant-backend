@@ -47,7 +47,8 @@ class Api::ConsultantController < Api::ApplicationController
               websiteUrl: s.website_url,
               facebookUrl: s.facebook_url,
               twitterUrl: s.twitter_url,
-              logoUrl: (s.company.logo.attached? && !s.company.logo.blob.nil?) ? url_for(s.company.logo.variant(resize: '400x300').processed.service_url) : nil, 
+              status: s.status,
+              logoUrl: (s.company.logo.attached? && !s.company.logo.blob.nil?) ? url_for(s.company.logo.variant(resize: '300x300').processed.service_url) : nil, 
               newsItems: s.news_items.map {|ni| {
                 id: ni.id,
                 newsType: {
@@ -122,8 +123,24 @@ class Api::ConsultantController < Api::ApplicationController
   def category_companies
     respond_to do |format| 
       format.json {
+        records = Company.joins(:company_category).group_by(&:company_category_label)
+        results = {}
+        records.each do |category_name, companies|
+          results[category_name] = []
+          companies.each do |company|
+            results[category_name].push({
+              id: company.id,
+              name: company.name,
+              label: company.label,
+              categoryId: company.company_category_id,
+              categoryName: company.company_category.name,
+              categoryLabel: company.company_category.label,
+              logoUrl: (company.logo.attached? && !company.logo.blob.nil?) ? url_for(company.logo.variant(resize: '300x300').processed.service_url) : nil
+            })
+          end
+        end
         render json: { 
-          results: Company.joins(:company_category).group_by(&:company_category_label)
+          results: results
         }
       }
     end
@@ -143,6 +160,8 @@ class Api::ConsultantController < Api::ApplicationController
     end
     # TODO Send back a success/error message
   end
+
+  # CUSTOMER NOTES
 
   def create_customer_note
     user = current_resource_owner 
@@ -170,6 +189,45 @@ class Api::ConsultantController < Api::ApplicationController
   def remove_customer_note
     SubscriptionUserNote.find(params[:customerNoteId]).destroy
     # TODO Send back a success/error message
+  end
+
+  # SUBSCRIPTIONS
+
+  def create_subscription
+    user = current_resource_owner 
+    company_id = params[:companyId]
+    website_url = params[:websiteUrl]
+    facebook_url = params[:facebookUrl]
+    twitter_url = params[:twitterUrl]
+
+    s = Subscription.where(company_id: company_id, user_id: user.id).first
+    if s.nil? 
+      s = Subscription.create(
+        company_id: company_id,
+        user_id: user.id,
+        website_url: website_url,
+        facebook_url: facebook_url,
+        twitter_url: twitter_url,
+        active: false
+      )
+    end
+    # TODO Send back a success/error message
+  end
+
+  def update_subscription
+    user = current_resource_owner 
+    subscription_id = params[:subscriptionId]
+    website_url = params[:websiteUrl]
+    facebook_url = params[:facebookUrl]
+    twitter_url = params[:twitterUrl]
+    Subscription.find(subscription_id).update(website_url: website_url, facebook_url: facebook_url, twitter_url: twitter_url)
+    # TODO Send back a success/error message
+  end
+
+  def remove_subscription
+    Subscription.find(params[:subscriptionId]).destroy
+    # TODO Send back a success/error message
+    # TODO manage Stripe subscription
   end
 
   # NEWS ITEMS
