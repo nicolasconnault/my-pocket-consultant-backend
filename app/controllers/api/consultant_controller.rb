@@ -214,6 +214,19 @@ class Api::ConsultantController < Api::ApplicationController
     # TODO Send back a success/error message
   end
 
+  def deactivate_subscription
+    user = current_resource_owner 
+    subscription_id = params[:subscriptionId]
+    subscription = Subscription.find(subscription_id)
+    subscription.update(active: false)
+    # TODO send a notification to every customer, tell them that this consultant is now offline, and prompt them to choose a new one when they click the notification or next time they launch the app
+
+    subscription.subscription_users.each do |su|
+      su.destroy
+    end
+    # TODO Send back a success/error message
+  end
+
   def update_subscription
     user = current_resource_owner 
     subscription_id = params[:subscriptionId]
