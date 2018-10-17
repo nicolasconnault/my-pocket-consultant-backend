@@ -6,15 +6,15 @@ class Dashboard::CompaniesController < Dashboard::ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
 
-  @@model = Company
-  @@entity_name = 'Company'
+  MODEL = Company
+  ENTITY_NAME = 'Company'
   def index
-    @entity_name = @@entity_name
+    @entity_name = ENTITY_NAME
 
     @categories = CompanyCategory.all.map {|cc| [cc.name, cc.id]}
     @news_types = NewsType.all.map {|nt| [nt.label, nt.id]}
 
-    @heading_title = @entity_name.pluralize
+    @heading_title = 'Companies'
     respond_to do |format|
       format.html { render 'dashboard/companies/index' }
       format.json { render json: CompanyDatatable.new(params, view_context: view_context, user: current_user ) }
@@ -22,7 +22,7 @@ class Dashboard::CompaniesController < Dashboard::ApplicationController
   end
 
   def edit
-    @entity_name = @@entity_name
+    @entity_name = ENTITY_NAME
 
     params = company_params
 

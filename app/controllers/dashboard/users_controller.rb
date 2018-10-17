@@ -6,11 +6,11 @@ class Dashboard::UsersController < Dashboard::ApplicationController
   before_action :authenticate_user!, except: [:sso]
   load_and_authorize_resource except: [:sso]
   
-  @@model = User
-  @@entity_name = 'User'
+  MODEL = User
+  ENTITY_NAME = 'User'
 
   def index
-    @entity_name = @@entity_name
+    @entity_name = ENTITY_NAME
     @roles = Role.all.map {|role| [role.name, role.id]}
 
     @heading_title = @entity_name.pluralize
@@ -29,7 +29,7 @@ class Dashboard::UsersController < Dashboard::ApplicationController
   end
 
   def edit
-    @entity_name = @@entity_name
+    @entity_name = ENTITY_NAME
 
     params = user_params
     

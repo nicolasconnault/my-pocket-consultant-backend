@@ -8,8 +8,8 @@ class Dashboard::ApplicationController < ActionController::Base
   before_action :setPrepare
   before_action :current_ability
   before_action :load_navigation
-  @@model = nil
-  @@entity_name = ''
+  MODEL = nil
+  ENTITY_NAME = ''
 
   def current_ability
     @current_ability ||= DashboardAbility.new(current_user)
@@ -20,18 +20,18 @@ class Dashboard::ApplicationController < ActionController::Base
     ids = params[:ids]
 
     if id
-      entity = @@model.where(id: id)
+      entity = self.class::MODEL.where(id: id)
       if entity.empty?
-        message = Xhr.build_message "#{@@entity_name} has already been deleted.", :warning, "#{@@entity_name} already deleted"
+        message = Xhr.build_message "#{self.class::ENTITY_NAME} has already been deleted.", :warning, "#{self.class::ENTITY_NAME} already deleted"
       else
         entity.first.destroy
-        message = Xhr.build_message "#{@@entity_name} successfully deleted."
+        message = Xhr.build_message "#{self.class::ENTITY_NAME} successfully deleted."
       end
     elsif ids
-      @@model.where(id: ids).each do |e|
+      self.class::MODEL.where(id: ids).each do |e|
         e.destroy
       end
-      message = Xhr.build_message "#{@@entity_name} successfully deleted."
+      message = Xhr.build_message "#{self.class::ENTITY_NAME} successfully deleted."
     end
     render json: message, status: 200
   end

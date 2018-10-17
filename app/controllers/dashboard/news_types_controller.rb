@@ -6,11 +6,11 @@ class Dashboard::NewsTypesController < Dashboard::ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
   
-  @@model = NewsType
-  @@entity_name = 'News Type'
+  MODEL = NewsType
+  ENTITY_NAME = 'News Type'
 
   def index
-    @entity_name = @@entity_name
+    @entity_name = ENTITY_NAME
 
     @heading_title = @entity_name.pluralize
     respond_to do |format|
@@ -20,7 +20,7 @@ class Dashboard::NewsTypesController < Dashboard::ApplicationController
   end
 
   def edit
-    @entity_name = @@entity_name
+    @entity_name = ENTITY_NAME
 
     params = news_type_params
 
