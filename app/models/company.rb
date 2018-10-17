@@ -8,6 +8,8 @@ class Company < ApplicationRecord
   has_many :company_tutorials
   has_many :company_news_types
   has_many :news_types, through: :company_news_types, dependent: :destroy
+  has_many :users_companies, dependent: :destroy
+  has_many :users, through: :users_companies, dependent: :destroy
 
   has_one_attached :logo
 
