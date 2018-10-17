@@ -143,6 +143,7 @@ Rails.application.routes.draw do
         
         put '/create_subscription' => 'consultant#create_subscription', as: :create_subscription
         put '/update_subscription' => 'consultant#update_subscription', as: :update_subscription
+        put '/save_subscription_token' => 'consultant#save_subscription_token', as: :save_subscription_token
         delete '/remove_subscription' => 'consultant#remove_subscription', as: :remove_subscription
         put '/deactivate_subscription'   => 'consultant#deactivate_subscription',    as: :deactivate_subscription
         

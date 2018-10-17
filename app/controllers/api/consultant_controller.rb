@@ -243,6 +243,13 @@ class Api::ConsultantController < Api::ApplicationController
     # TODO manage Stripe subscription
   end
 
+  def save_subscription_token
+    token = params[:stripeToken]
+    subscription = Subscription.find(params[:subscriptionId])
+    subscription.enabled = true
+    subscription.save!
+  end
+
   # NEWS ITEMS
   
   def create_news_item
