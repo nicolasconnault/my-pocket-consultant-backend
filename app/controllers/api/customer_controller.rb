@@ -33,23 +33,66 @@ class Api::CustomerController < Api::ApplicationController
   end
 
   def register
-    # TODO Validation
-    user = User.create(
-      username: params[:username],
-      first_name: params[:firstName],
-      last_name: params[:lastName],
-      email: params[:username],
-      password: params[:password],
-    )
-    country = Country.find_by_code(params[:countryCode])
-    unless country.nil? || params[:timeZone].nil?
-      user.address = Address.create(postcode: params[:postcode], country: country, timezone: params[:timeZone])
-    end
-    user.save!
+    existing_user = User.find_by_username(params[:username])
+    if !existing_user.nil? && !existing_user.email.nil?
+      render json: { 
+        error: 'Email address is already in use.',
+        errorField: 'username'
+      }, status: 422
+    else
+      # If a previous unconfirmed account exists with this username, delete it first
+      if !existing_user.nil?
+        existing_user.destroy!
+      end
+      user = User.create(
+        username: params[:username],
+        first_name: params[:firstName],
+        last_name: params[:lastName],
+        unconfirmed_email: params[:username],
+        password: params[:password],
+      )
+      country = Country.find_by_code(params[:countryCode])
+      unless country.nil? || params[:timeZone].nil?
+        user.address = Address.create(postcode: params[:postcode], country: country, timezone: params[:timeZone])
+      end
 
-    user = User.last
-    access_token = Doorkeeper::AccessToken.create!(:resource_owner_id => user.id)
-    render json: { access_token: Doorkeeper::OAuth::TokenResponse.new(access_token).body["access_token"] }
+      # Confirmable will now attempt to send an email confirmation. Ignore sending errors if we are in dev mode
+      begin
+        user.save!
+      rescue OpenSSL::SSL::SSLError
+        if Rails.env.production?
+          # Handle error appropriately
+        else 
+          # Ignore error
+        end
+      end
+
+      # User is not yet confirmed. Devise automatically generated a very long token with user.save!, but let's provide a 4-digit PIN instead, easier to enter for mobile users
+      user = User.last
+      user.confirmation_token = 4.times.map{rand(10)}.join
+      user.save!
+      access_token = Doorkeeper::AccessToken.create!(:resource_owner_id => user.id)
+      render json: { confirmationPin: user.confirmation_token, accessToken: Doorkeeper::OAuth::TokenResponse.new(access_token).body["access_token"] }
+      # TODO if the email is not confirmed within a certain time, the DoorKeeper token should also be deleted
+    end
+  end
+
+  # PIN should have already been confirmed in the App, this method is only meant to record the confirmation in the DB using Devise fields
+  def email_confirmation
+    user = current_resource_owner
+    user.email = user.unconfirmed_email
+    user.unconfirmed_email = nil
+    user.confirmed_at = Time.now
+  end
+
+  # Just in case we need this at some stage
+  def send_sms
+    sns = Aws::SNS::Client.new(
+      access_key_id: Rails.application.credentials.aws[:access_key_id], 
+      secret_access_key: Rails.application.credentials.aws[:secret_access_key], 
+      region: Rails.application.credentials.aws[:region]
+    )
+    response = sns.publish(phone_number: SOME_PHONE_NUMBER, message: MESSAGE) # e.g., { message_id: b6eeb3d1-e532-5bc6-8482-e790aff07433 }
   end
 
   def save_profile
@@ -179,7 +222,8 @@ class Api::CustomerController < Api::ApplicationController
             state: user.state,
             phone: user.phone,
             country: country_object,
-            countryCode: country_object[:code]
+            countryCode: country_object[:code],
+            confirmed: user.confirmed?,
           } 
         }
       }

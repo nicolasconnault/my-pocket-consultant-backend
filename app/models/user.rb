@@ -4,7 +4,7 @@ class User < ApplicationRecord
   rolify
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :lockable, :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable
+  devise :confirmable, :lockable, :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable
   delegate :can?, :cannot?, :to => :ability
   has_many :access_grants, class_name: "Doorkeeper::AccessGrant",
                            foreign_key: :resource_owner_id,

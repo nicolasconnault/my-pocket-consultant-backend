@@ -112,6 +112,7 @@ Rails.application.routes.draw do
         post '/news_types' => 'customer#news_types', as: :news_types
         post '/notifications' => 'customer#notifications', as: :user_notifications
         post '/register' => 'customer#register', as: :register
+        post '/email_confirmation' => 'customer#email_confirmation', as: :email_confirmation
         post '/user' => 'customer#user_details', as: :user_details
         post '/consultants' => 'customer#consultants', as: :consultants
         post '/customer_companies' => 'customer#customer_companies', as: :customer_companies
