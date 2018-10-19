@@ -107,12 +107,20 @@ Rails.application.routes.draw do
 
       end
 
+      scope 'auth', defaults: { format: :json } do
+        post '/register' => 'auth#register', as: :register
+        post '/email_confirmation' => 'auth#email_confirmation', as: :email_confirmation
+        post '/resend_email_confirmation' => 'auth#resend_email_confirmation', as: :resend_email_confirmation
+        devise_for :users, controllers: {
+           registrations: 'api/auth/registrations',
+        }, skip: [:sessions, :password]
+
+      end
+
       scope 'customer', defaults: { format: :json } do
         post '/company_news_items' => 'customer#company_news_items', as: :company_news_items
         post '/news_types' => 'customer#news_types', as: :news_types
         post '/notifications' => 'customer#notifications', as: :user_notifications
-        post '/register' => 'customer#register', as: :register
-        post '/email_confirmation' => 'customer#email_confirmation', as: :email_confirmation
         post '/user' => 'customer#user_details', as: :user_details
         post '/consultants' => 'customer#consultants', as: :consultants
         post '/customer_companies' => 'customer#customer_companies', as: :customer_companies
@@ -124,10 +132,6 @@ Rails.application.routes.draw do
         put '/toggle_user_company_news_type' => 'customer#toggle_subscription_user_news_type', as: :toggle_subscription_user_news_type
 
         delete '/remove_notification' => 'customer#remove_notification', as: :remove_notification
-
-        devise_for :users, controllers: {
-           registrations: 'api/customer/registrations',
-        }, skip: [:sessions, :password]
 
       end
 
