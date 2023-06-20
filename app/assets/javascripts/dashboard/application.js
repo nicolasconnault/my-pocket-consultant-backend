@@ -14,7 +14,6 @@
 //= require moment
 //= require dashboard/z.jquery.fileupload
 //= require bootstrap-sprockets
-//= require metismenu
 //= require pace/pace
 //= require bootstrap-datetimepicker
 //= require jquery.peity
@@ -38,5 +37,6 @@
 //= require dashboard/plugins/reference.min
 //= require dashboard/plugins/topic_link.min
 //= require dashboard/humps 
-//= require dashboard/global 
+//= require dashboard/metisMenu.min
+//= require dashboard/global
 //= require_tree ./channels

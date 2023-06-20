@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { sessions: 'users/sessions' }
 
   # Serve websocket cable requests in-process
-  mount ActionCable.server => '/cable'
+  # mount ActionCable.server => '/cable'
  
   scope module: 'dashboard' do
     constraints DomainConstraint.new(['dashboard.mypocketconsultant.app', 'stagingdashboard.mypocketconsultant.app', 'dashboard.mypocketconsultant', 'mpcdashboard.smbstreamline.com.au']) do
@@ -94,7 +94,7 @@ Rails.application.routes.draw do
   end
 
   scope module: 'api' do
-    constraints DomainConstraint.new(['api.mypocketconsultant.app', 'stagingapi.mypocketconsultant.app', 'app.mypocketconsultant', 'mpc.smbstreamline.com.au', '192.168.0.11']) do
+    constraints DomainConstraint.new(['api.mypocketconsultant', 'api.mypocketconsultant.app', 'stagingapi.mypocketconsultant.app', 'app.mypocketconsultant', 'mpc.smbstreamline.com.au', '192.168.0.11']) do
       use_doorkeeper do
         # No need to register client application
         skip_controllers :applications, :authorized_applications

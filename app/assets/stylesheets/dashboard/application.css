@@ -21,8 +21,8 @@
  *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
  *= require dashboard/jquery.dataTables.yadcf
  *= require dashboard/formValidation.min 
+ *= require dashboard/metisMenu.min
  *= require switchery
- *= require metismenu
  *= require dashboard/style
  *= require font-awesome
  *= require chosen

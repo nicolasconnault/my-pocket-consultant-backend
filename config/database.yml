@@ -11,7 +11,7 @@ default: &default
 
 development:
   <<: *default
-  username: <%= Rails.application.credentials.db[:username] %>
+  username: nicolasconnault
   password: <%= Rails.application.credentials.db[:password] %>
   database: mypocketconsultant
 

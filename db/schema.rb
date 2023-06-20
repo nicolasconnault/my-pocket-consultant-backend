@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_18_033526) do
+ActiveRecord::Schema.define(version: 2023_06_19_064605) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,35 +36,40 @@ ActiveRecord::Schema.define(version: 2018_10_18_033526) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "addresses", id: :serial, force: :cascade do |t|
-    t.integer "country_id"
-    t.integer "user_id"
+  create_table "addresses", force: :cascade do |t|
+    t.bigint "country_id"
+    t.bigint "user_id"
     t.string "street1"
     t.string "street2"
     t.string "unit"
     t.string "suburb"
     t.float "latitude"
     t.float "longitude"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.string "phone"
     t.string "fax"
     t.string "state"
     t.string "postcode"
     t.string "timezone"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["country_id"], name: "index_addresses_on_country_id"
+    t.index ["user_id"], name: "index_addresses_on_user_id"
   end
 
-  create_table "companies", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 64, null: false
-    t.string "label", limit: 64, null: false
-    t.integer "company_category_id"
+  create_table "companies", force: :cascade do |t|
+    t.string "name"
+    t.string "label"
+    t.bigint "company_category_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_category_id"], name: "index_companies_on_company_category_id"
   end
 
-  create_table "company_categories", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 64, null: false
-    t.string "label", limit: 64, null: false
+  create_table "company_categories", force: :cascade do |t|
+    t.string "name"
+    t.string "label"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "company_news_types", id: :serial, force: :cascade do |t|
@@ -78,14 +83,15 @@ ActiveRecord::Schema.define(version: 2018_10_18_033526) do
 
   create_table "company_tutorials", id: :serial, force: :cascade do |t|
     t.integer "company_id"
+    t.integer "tutorial_category_id"
     t.string "title", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "tutorial_category_id", null: false
     t.index ["company_id"], name: "index_company_tutorials_on_company_id"
+    t.index ["tutorial_category_id"], name: "index_company_tutorials_on_tutorial_category_id"
   end
 
-  create_table "countries", id: :serial, force: :cascade do |t|
+  create_table "countries", force: :cascade do |t|
     t.string "name"
     t.string "code"
     t.datetime "created_at", null: false
@@ -173,34 +179,48 @@ ActiveRecord::Schema.define(version: 2018_10_18_033526) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "role_notification_types", id: :serial, force: :cascade do |t|
-    t.integer "role_id"
-    t.integer "wupee_notification_type_id"
-    t.boolean "email"
-    t.boolean "notify"
+  create_table "rails_push_notifications_apns_apps", force: :cascade do |t|
+    t.text "apns_dev_cert"
+    t.text "apns_prod_cert"
+    t.boolean "sandbox_mode"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["role_id"], name: "index_role_notification_types_on_role_id"
-    t.index ["wupee_notification_type_id"], name: "index_role_notification_types_on_wupee_notification_type_id"
   end
 
-  create_table "roles", id: :serial, force: :cascade do |t|
+  create_table "rails_push_notifications_gcm_apps", force: :cascade do |t|
+    t.string "gcm_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "rails_push_notifications_mpns_apps", force: :cascade do |t|
+    t.text "cert"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "rails_push_notifications_notifications", force: :cascade do |t|
+    t.text "destinations"
+    t.integer "app_id"
+    t.string "app_type"
+    t.text "data"
+    t.text "results"
+    t.integer "success"
+    t.integer "failed"
+    t.boolean "sent", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["app_id", "app_type", "sent"], name: "app_and_sent_index_on_rails_push_notifications"
+  end
+
+  create_table "roles", force: :cascade do |t|
     t.string "name"
     t.string "resource_type"
-    t.integer "resource_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string "label"
+    t.bigint "resource_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
-    t.index ["name"], name: "index_roles_on_name"
-  end
-
-  create_table "settings", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 510, null: false
-    t.text "value", null: false
-    t.string "status", limit: 32, default: "Active", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.index ["resource_type", "resource_id"], name: "index_roles_on_resource_type_and_resource_id"
   end
 
   create_table "subscription_user_call_reminders", force: :cascade do |t|
@@ -242,12 +262,10 @@ ActiveRecord::Schema.define(version: 2018_10_18_033526) do
     t.index ["user_id"], name: "index_subscription_users_on_user_id"
   end
 
-  create_table "subscriptions", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "company_id"
+  create_table "subscriptions", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "company_id"
     t.boolean "active"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.string "website_url"
     t.string "facebook_url"
     t.string "twitter_url"
@@ -283,21 +301,15 @@ ActiveRecord::Schema.define(version: 2018_10_18_033526) do
     t.index ["user_id"], name: "index_user_devices_on_user_id"
   end
 
-  create_table "user_push_notification_devices", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "push_notification_device_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "users", id: :serial, force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
     t.string "username"
     t.string "password"
+    t.string "phone"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "email"
+    t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -314,21 +326,21 @@ ActiveRecord::Schema.define(version: 2018_10_18_033526) do
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "locked_at"
-    t.string "phone", limit: 14
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.string "avatar"
+    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
-    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
-  create_table "users_companies", id: :serial, force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "company_id", null: false
-    t.integer "consultant_id"
-    t.boolean "enabled", default: true
-    t.index ["company_id"], name: "index_user_companies_on_company_id"
-    t.index ["consultant_id"], name: "index_user_companies_on_consultant_id"
-    t.index ["user_id"], name: "index_user_companies_on_user_id"
+  create_table "users_companies", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "company_id"
+    t.bigint "consultant_id"
+    t.boolean "enabled"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_users_companies_on_company_id"
+    t.index ["consultant_id"], name: "index_users_companies_on_consultant_id"
+    t.index ["user_id"], name: "index_users_companies_on_user_id"
   end
 
   create_table "users_company_news_types", id: :serial, force: :cascade do |t|
@@ -341,56 +353,26 @@ ActiveRecord::Schema.define(version: 2018_10_18_033526) do
   end
 
   create_table "users_roles", id: false, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "role_id"
+    t.bigint "user_id"
+    t.bigint "role_id"
+    t.index ["role_id"], name: "index_users_roles_on_role_id"
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
-  end
-
-  create_table "wupee_notification_type_configurations", id: :serial, force: :cascade do |t|
-    t.integer "notification_type_id"
-    t.string "receiver_type"
-    t.integer "receiver_id"
-    t.integer "value", default: 0
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["notification_type_id"], name: "idx_wupee_notif_type_config_on_notification_type_id"
-    t.index ["receiver_type", "receiver_id"], name: "idx_wupee_notif_typ_config_on_receiver_type_and_receiver_id"
-  end
-
-  create_table "wupee_notification_types", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_wupee_notification_types_on_name", unique: true
-  end
-
-  create_table "wupee_notifications", id: :serial, force: :cascade do |t|
-    t.string "receiver_type"
-    t.integer "receiver_id"
-    t.string "attached_object_type"
-    t.integer "attached_object_id"
-    t.integer "notification_type_id"
-    t.boolean "is_read", default: false
-    t.boolean "is_sent", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "is_wanted", default: true
+    t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
   add_foreign_key "addresses", "countries"
+  add_foreign_key "addresses", "users"
   add_foreign_key "companies", "company_categories"
   add_foreign_key "company_news_types", "companies"
   add_foreign_key "company_news_types", "news_types"
   add_foreign_key "company_tutorials", "companies"
-  add_foreign_key "company_tutorials", "tutorial_categories", name: "tutorial_category_fk_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "company_tutorials", "tutorial_categories"
   add_foreign_key "news_items", "news_types"
   add_foreign_key "news_items", "subscriptions"
   add_foreign_key "notifications", "news_items"
   add_foreign_key "notifications", "users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
-  add_foreign_key "role_notification_types", "roles"
-  add_foreign_key "role_notification_types", "wupee_notification_types"
   add_foreign_key "subscription_user_call_reminders", "subscription_users"
   add_foreign_key "subscription_user_news_types", "news_types"
   add_foreign_key "subscription_user_news_types", "subscription_users"
@@ -405,10 +387,7 @@ ActiveRecord::Schema.define(version: 2018_10_18_033526) do
   add_foreign_key "user_devices", "users"
   add_foreign_key "users_companies", "companies"
   add_foreign_key "users_companies", "users"
+  add_foreign_key "users_companies", "users", column: "consultant_id"
   add_foreign_key "users_company_news_types", "news_types"
   add_foreign_key "users_company_news_types", "users_companies"
-  add_foreign_key "users_roles", "roles"
-  add_foreign_key "users_roles", "users"
-  add_foreign_key "wupee_notification_type_configurations", "wupee_notification_types", column: "notification_type_id"
-  add_foreign_key "wupee_notifications", "wupee_notification_types", column: "notification_type_id"
 end

@@ -35,11 +35,15 @@ class Dashboard::CompaniesController < Dashboard::ApplicationController
       end
     else
       company = Company.find params[:id] 
-      if company.update_attributes(params) 
-        company.expire_second_level_cache
-        flash[:success] = {"message" => "The company was successfully updated", "heading" => "Success!"}
-      else
-        flash[:error] = {"message" => "The company could not be updated: #{company.errors.full_messages.join(', ')}", "heading" => "Errors!"}
+      begin
+        if company.update_attributes(params)
+          company.expire_second_level_cache
+          flash[:success] = {"message" => "The company was successfully updated", "heading" => "Success!"}
+        else
+          flash[:error] = {"message" => "The company could not be updated: #{company.errors.full_messages.join(', ')}", "heading" => "Errors!"}
+        end
+      rescue NoMethodError => e
+        byebug
       end
     end 
 
